@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "types": ["vite/client", "node"],
+        "target": "ES2022",
+        "useDefineForClassFields": true,
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "skipLibCheck": true,
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "strict": true,
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "baseUrl": "src",
+        "paths": {
+            "@components/*": ["components/*"],
+            "@pages/*": ["pages/*"],
+            "@services/*": ["services/*"],
+            "@hooks/*": ["hooks/*"],
+            "@context/*": ["context/*"],
+            "@utils/*": ["utils/*"],
+            "@types/*": ["types/*"],
+            "@constants/*": ["constants/*"],
+            "@assets/*": ["assets/*"],
+            "@router/*": ["router/*"],
+            "@store/*": ["store/*"],
+            "@src/*": ["./*"]
+        }
+    },
+    "include": ["src/**/*", "*.config.ts", "types/**/*.d.ts"],
+    "exclude": ["dist", "node_modules", "vite.config.ts"],
+    "references": [
+        { "path": "./tsconfig.node.json" }
+    ]
+}

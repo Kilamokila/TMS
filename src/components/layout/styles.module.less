@@ -1,0 +1,21 @@
+.wrapper {
+    display: grid;
+    grid-template:
+        'header header' auto
+        'sidebar main' auto;
+    max-width: 100vw;
+    min-height: 100vh;
+    margin: 0 auto;
+}
+
+.header {
+    grid-area: header;
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
+}
