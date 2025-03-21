@@ -1,0 +1,84 @@
+{
+    "common": {
+        "create": "Создать",
+        "edit": "Редактировать",
+        "delete": "Удалить",
+        "cancel": "Отмена",
+        "save": "Сохранить",
+        "loading": "Загрузка...",
+        "search": "Поиск",
+        "filter": "Фильтр",
+        "status": "Статус",
+        "active": "Активный",
+        "inactive": "Неактивный",
+        "add": "Добавить",
+        "remove": "Удалить"
+    },
+    "languages": {
+        "en": "Английский",
+        "ru": "Русский"
+    },
+    "header": {
+        "projects": "Проекты",
+        "workspace": "Пространство",
+        "toggleTheme": "Переключить тему",
+        "toggleLanguage": "Переключить язык"
+    },
+    "projects": {
+        "title": "Проекты",
+        "createNewProject": "Создать новый проект",
+        "searchProjects": "Поиск проектов",
+        "addFilter": "Добавить фильтр",
+        "statusActive": "Статус: Активный",
+        "projectName": "НАЗВАНИЕ ПРОЕКТА",
+        "unresolvedDefects": "НЕРЕШЕННЫЕ ДЕФЕКТЫ",
+        "testRuns": "ТЕСТОВЫЕ ПРОГОНЫ",
+        "milestones": "ВЕХИ",
+        "teamMembers": "УЧАСТНИКИ",
+        "openIssues": "{{count}} открытых проблем",
+        "testCasesCount": "{{count}} тестовых сценариев",
+        "suitesCount": "{{count}} наборов",
+        "activeRunsCount": "{{count}} активных прогонов",
+        "deleteProjectConfirm": "Вы уверены, что хотите удалить этот проект?",
+        "projectDeleted": "Проект успешно удален",
+        "rowsPerPage": "Строк на странице:"
+    },
+    "createProject": {
+        "title": "Создание нового проекта",
+        "projectName": "Название проекта",
+        "projectCode": "Код проекта",
+        "description": "Описание",
+        "codeHint": "Этот код будет использоваться в URL и не может быть изменен позже",
+        "nameRequired": "Название проекта обязательно",
+        "codeRequired": "Код проекта обязателен",
+        "success": "Проект успешно создан"
+    },
+    "sidebar": {
+        "tests": "ТЕСТЫ",
+        "execution": "ВЫПОЛНЕНИЕ",
+        "issues": "ПРОБЛЕМЫ",
+        "repository": "Репозиторий",
+        "sharedSteps": "Общие шаги",
+        "review": "Проверка",
+        "traceabilityReports": "Отчеты по прослеживаемости",
+        "testPlans": "Планы тестирования",
+        "testRuns": "Прогоны тестов",
+        "configurations": "Конфигурации",
+        "environments": "Окружения",
+        "defects": "Дефекты",
+        "requirements": "Требования",
+        "milestones": "Вехи",
+        "settings": "Настройки",
+        "collapseMenu": "Свернуть меню"
+    },
+    "validation": {
+        "required": "{{field}} обязательно для заполнения",
+        "minLength": "{{field}} должно содержать не менее {{count}} символов",
+        "maxLength": "{{field}} должно содержать не более {{count}} символов",
+        "pattern": "{{field}} имеет неверный формат",
+        "email": "Укажите действительный адрес электронной почты",
+        "url": "Укажите действительный URL",
+        "unique": "{{field}} должно быть уникальным",
+        "invalidType": "Неверный тип значения для {{field}}"
+    }
+}

@@ -1,0 +1,84 @@
+{
+    "common": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "save": "Save",
+        "loading": "Loading...",
+        "search": "Search",
+        "filter": "Filter",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "add": "Add",
+        "remove": "Remove"
+    },
+    "languages": {
+        "en": "English",
+        "ru": "Russian"
+    },
+    "header": {
+        "projects": "Projects",
+        "workspace": "Workspace",
+        "toggleTheme": "Toggle theme",
+        "toggleLanguage": "Toggle language"
+    },
+    "projects": {
+        "title": "Projects",
+        "createNewProject": "Create new project",
+        "searchProjects": "Search for projects",
+        "addFilter": "Add filter",
+        "statusActive": "Status: Active",
+        "projectName": "PROJECT NAME",
+        "unresolvedDefects": "UNRESOLVED DEFECTS",
+        "testRuns": "TEST RUNS",
+        "milestones": "MILESTONES",
+        "teamMembers": "TEAM MEMBERS",
+        "openIssues": "{{count}} open issues",
+        "testCasesCount": "{{count}} test cases",
+        "suitesCount": "{{count}} suites",
+        "activeRunsCount": "{{count}} active run",
+        "deleteProjectConfirm": "Are you sure you want to delete this project?",
+        "projectDeleted": "Project deleted successfully",
+        "rowsPerPage": "Rows per page:"
+    },
+    "createProject": {
+        "title": "Create New Project",
+        "projectName": "Project Name",
+        "projectCode": "Project Code",
+        "description": "Description",
+        "codeHint": "This code will be used in URLs and can't be changed later",
+        "nameRequired": "Project name is required",
+        "codeRequired": "Project code is required",
+        "success": "Project created successfully"
+    },
+    "sidebar": {
+        "tests": "TESTS",
+        "execution": "EXECUTION",
+        "issues": "ISSUES",
+        "repository": "Repository",
+        "sharedSteps": "Shared Steps",
+        "review": "Review",
+        "traceabilityReports": "Traceability Reports",
+        "testPlans": "Test Plans",
+        "testRuns": "Test Runs",
+        "configurations": "Configurations",
+        "environments": "Environments",
+        "defects": "Defects",
+        "requirements": "Requirements",
+        "milestones": "Milestones",
+        "settings": "Settings",
+        "collapseMenu": "Collapse menu"
+    },
+    "validation": {
+        "required": "{{field}} is required",
+        "minLength": "{{field}} must be at least {{count}} characters",
+        "maxLength": "{{field}} must not exceed {{count}} characters",
+        "pattern": "{{field}} has an invalid format",
+        "email": "Please enter a valid email address",
+        "url": "Please enter a valid URL",
+        "unique": "{{field}} must be unique",
+        "invalidType": "Invalid value type for {{field}}"
+    }
+}
