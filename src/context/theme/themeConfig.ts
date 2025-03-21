@@ -1,7 +1,10 @@
 import { palette } from './palette';
 import { TMode } from './types/themeModes';
+import { ThemeOptions } from '@mui/material';
 
-export const getThemeConfig = (mode: TMode) => {
+type TextTransform = 'none' | 'capitalize' | 'uppercase' | 'lowercase';
+
+export const getThemeConfig = (mode: TMode): ThemeOptions => {
     const selectedPalette = palette[mode].colors;
 
     return {
@@ -25,7 +28,7 @@ export const getThemeConfig = (mode: TMode) => {
         typography: {
             fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
             button: {
-                textTransform: 'none',
+                textTransform: 'none' as TextTransform,
                 fontWeight: 500,
             },
         },
@@ -49,7 +52,7 @@ export const getThemeConfig = (mode: TMode) => {
                 styleOverrides: {
                     root: {
                         borderRadius: 8,
-                        textTransform: 'none',
+                        textTransform: 'none' as TextTransform,
                     },
                 },
             },
