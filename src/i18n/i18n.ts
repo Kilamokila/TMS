@@ -9,8 +9,12 @@ import { LocalStorageUtil } from '@services/storage';
 
 interface Resources {
     [language: string]: {
-        translation: Record<string, Record<string, string>>;
+        translation: TranslationValue;
     };
+}
+
+interface TranslationValue {
+    [key: string]: string | TranslationValue;
 }
 
 const resources: Resources = {
