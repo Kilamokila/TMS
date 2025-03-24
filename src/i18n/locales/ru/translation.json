@@ -80,5 +80,52 @@
         "url": "Укажите действительный URL",
         "unique": "{{field}} должно быть уникальным",
         "invalidType": "Неверный тип значения для {{field}}"
+    },
+    "testRuns": {
+        "title": "Тестовые прогоны",
+        "startNewTestRun": "Начать новый тестовый прогон",
+        "searchPlaceholder": "Поиск тестовых прогонов",
+        "addFilter": "Добавить фильтр",
+        "columns": {
+            "title": "НАЗВАНИЕ",
+            "status": "СТАТУС",
+            "author": "АВТОР",
+            "environment": "ОКРУЖЕНИЕ",
+            "totalTime": "ОБЩЕЕ ВРЕМЯ",
+            "elapsedTime": "ПРОШЕДШЕЕ ВРЕМЯ",
+            "testRunStats": "СТАТИСТИКА ПРОГОНА"
+        },
+        "status": {
+            "inProgress": "В процессе",
+            "passed": "Пройдено",
+            "failed": "Провалено",
+            "blocked": "Заблокировано",
+            "invalid": "Недействительно"
+        },
+        "startedDaysAgo": "Запущен {{count}} дней назад",
+        "startedToday": "Запущен сегодня",
+        "startedYesterday": "Запущен вчера",
+        "newTestRun": {
+            "title": "Начать новый тестовый прогон",
+            "manual": "Ручной",
+            "titlePlaceholder": "Тестовый прогон 2025/03/24",
+            "descriptionPlaceholder": "Например: мы можем авторизоваться на странице https://example.com",
+            "environment": "Окружение",
+            "milestone": "Веха",
+            "defaultAssignee": "Назначенный по умолчанию",
+            "tags": "Теги",
+            "notSet": "Не задано",
+            "selectValue": "Выберите значение",
+            "configurations": "Конфигурации",
+            "operatingSystem": "Операционная система",
+            "tests": "Тесты",
+            "testCasesSelected": "{{count}} тестовых сценариев выбрано для прогона",
+            "fromRepository": "Из репозитория",
+            "fromTestPlan": "Из тестового плана",
+            "fromSavedQuery": "Из сохраненного запроса",
+            "selectCases": "Выбрать сценарии",
+            "businessPlanFeature": "Эта функция доступна на Бизнес-плане и выше",
+            "startRun": "Начать прогон"
+        }
     }
 }

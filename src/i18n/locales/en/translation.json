@@ -80,5 +80,52 @@
         "url": "Please enter a valid URL",
         "unique": "{{field}} must be unique",
         "invalidType": "Invalid value type for {{field}}"
+    },
+    "testRuns": {
+        "title": "Test runs",
+        "startNewTestRun": "Start new test run",
+        "searchPlaceholder": "Search for test runs",
+        "addFilter": "Add filter",
+        "columns": {
+            "title": "TITLE",
+            "status": "STATUS",
+            "author": "AUTHOR",
+            "environment": "ENVIRONMENT",
+            "totalTime": "TOTAL TIME",
+            "elapsedTime": "ELAPSED TIME",
+            "testRunStats": "TEST RUN STATS"
+        },
+        "status": {
+            "inProgress": "In Progress",
+            "passed": "Passed",
+            "failed": "Failed",
+            "blocked": "Blocked",
+            "invalid": "Invalid"
+        },
+        "startedDaysAgo": "Started {{count}} days ago",
+        "startedToday": "Started today",
+        "startedYesterday": "Started yesterday",
+        "newTestRun": {
+            "title": "Start a new test run",
+            "manual": "Manual",
+            "titlePlaceholder": "Test run 2025/03/24",
+            "descriptionPlaceholder": "For example: we can authorize on page https://example.com",
+            "environment": "Environment",
+            "milestone": "Milestone",
+            "defaultAssignee": "Default assignee",
+            "tags": "Tags",
+            "notSet": "Not set",
+            "selectValue": "Select value",
+            "configurations": "Configurations",
+            "operatingSystem": "Operating System",
+            "tests": "Tests",
+            "testCasesSelected": "{{count}} test cases are selected for the run",
+            "fromRepository": "From repository",
+            "fromTestPlan": "From a test plan",
+            "fromSavedQuery": "From a saved query",
+            "selectCases": "Select cases",
+            "businessPlanFeature": "This feature is a available on a Business plan and higher",
+            "startRun": "Start a run"
+        }
     }
 }
