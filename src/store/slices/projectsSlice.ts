@@ -1,4 +1,3 @@
-// src/store/slices/projectsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Project } from '@pages/projects/model/project';
 import { projectService } from '@services/api/projectService';

@@ -7,7 +7,7 @@ import { LANGUAGE, TLanguage } from './types/languageModes';
 
 export const LanguageContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [language, setLanguage] = useState<TLanguage>(
-        () => LocalStorageUtil.getItem(EStorageKeys.LANGUAGE) ?? LANGUAGE.EN,
+        () => LocalStorageUtil.getItem(EStorageKeys.LANGUAGE) ?? LANGUAGE.RU,
     );
 
     useEffect(() => {
