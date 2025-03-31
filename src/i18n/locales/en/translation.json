@@ -12,7 +12,9 @@
         "active": "Active",
         "inactive": "Inactive",
         "add": "Add",
-        "remove": "Remove"
+        "remove": "Remove",
+        "saving": "Saving...",
+        "deleting": "Deleting..."
     },
     "languages": {
         "en": "English",
@@ -30,7 +32,6 @@
         "searchProjects": "Search for projects",
         "addFilter": "Add filter",
         "statusActive": "Status: Active",
-        "projectName": "PROJECT NAME",
         "unresolvedDefects": "UNRESOLVED DEFECTS",
         "testRuns": "TEST RUNS",
         "milestones": "MILESTONES",
@@ -41,7 +42,22 @@
         "activeRunsCount": "{{count}} active run",
         "deleteProjectConfirm": "Are you sure you want to delete this project?",
         "projectDeleted": "Project deleted successfully",
-        "rowsPerPage": "Rows per page:"
+        "rowsPerPage": "Rows per page:",
+        "viewAsList": "View as list",
+        "viewAsGrid": "View as grid",
+        "projectCreated": "Project created successfully",
+        "projectUpdated": "Project updated successfully",
+        "projectDeleted": "Project deleted successfully",
+        "deleteProject": "Delete project",
+        "deleteProjectConfirm": "Are you sure you want to delete this project?",
+        "deleteProjectWarning": "This action cannot be undone. All test cases, runs and data associated with this project will be permanently deleted.",
+        "noProjectsFound": "No projects found",
+        "noIssues": "No issues",
+        "noMembers": "No members",
+        "actionsForProject": "Actions for project {{name}}",
+        "editProject": "Edit project",
+        "createProject": "Create new project",
+        "codeCannotBeChanged": "Project code cannot be changed after creation"
     },
     "createProject": {
         "title": "Create New Project",

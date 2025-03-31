@@ -1,5 +1,4 @@
-// src/pages/projects/components/CreateProjectDialog.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
@@ -13,28 +12,40 @@ import {
     Box,
     IconButton,
     Typography,
+    FormHelperText,
+    CircularProgress,
     useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ProjectFormData, projectSchema } from '../schema';
+import { ProjectResponseDto } from '@services/api/models';
 
-interface CreateProjectDialogProps {
+interface EditProjectDialogProps {
     open: boolean;
+    project?: ProjectResponseDto;
     onClose: () => void;
     onSubmit: (data: ProjectFormData) => Promise<void>;
-    isSubmitting?: boolean;
+    isSubmitting: boolean;
+    error?: string;
 }
 
-export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
+export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
     open,
+    project,
     onClose,
     onSubmit,
-    isSubmitting = false,
+    isSubmitting,
+    error,
 }) => {
     const theme = useTheme();
     const { t } = useTranslation();
 
-    const { control, handleSubmit, reset } = useForm<ProjectFormData>({
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<ProjectFormData>({
         resolver: zodResolver(projectSchema),
         defaultValues: {
             name: '',
@@ -45,20 +56,34 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
         mode: 'onTouched',
     });
 
+    // Заполняем форму данными проекта при открытии диалога
+    useEffect(() => {
+        if (project && open) {
+            reset({
+                name: project.name,
+                code: project.code,
+                description: project.description || '',
+                organizationId: project.organizationId,
+            });
+        }
+    }, [project, open, reset]);
+
     const handleFormSubmit: SubmitHandler<ProjectFormData> = async (data) => {
         try {
             await onSubmit(data);
-            reset();
-            onClose();
         } catch (error) {
-            console.error('Failed to create project:', error);
+            console.error('Failed to update project:', error);
         }
     };
 
     const handleClose = () => {
-        reset();
-        onClose();
+        if (!isSubmitting) {
+            reset();
+            onClose();
+        }
     };
+
+    const isEditMode = !!project;
 
     return (
         <Dialog
@@ -82,8 +107,10 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                     borderBottom: `1px solid ${theme.palette.divider}`,
                 }}
             >
-                <Typography variant="h6">{t('createProject.title')}</Typography>
-                <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
+                <Typography variant="h6">
+                    {isEditMode ? t('projects.editProject') : t('projects.createProject')}
+                </Typography>
+                <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close" disabled={isSubmitting}>
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -96,17 +123,18 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.projectName')}
+                                    label={t('projects.projectName')}
                                     fullWidth
                                     required
                                     error={!!fieldState.error}
                                     helperText={
                                         fieldState.error &&
                                         t(fieldState.error.message as string, {
-                                            field: t('createProject.projectName'),
+                                            field: t('projects.projectName'),
                                             count: 100,
                                         })
                                     }
+                                    disabled={isSubmitting}
                                 />
                             )}
                         />
@@ -116,18 +144,21 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.projectCode')}
+                                    label={t('projects.projectCode')}
                                     fullWidth
                                     required
                                     error={!!fieldState.error}
                                     helperText={
                                         fieldState.error
                                             ? t(fieldState.error.message as string, {
-                                                  field: t('createProject.projectCode'),
+                                                  field: t('projects.projectCode'),
                                                   count: 16,
                                               })
-                                            : t('createProject.codeHint')
+                                            : isEditMode
+                                              ? t('projects.codeCannotBeChanged')
+                                              : t('projects.codeHint')
                                     }
+                                    disabled={isEditMode || isSubmitting}
                                 />
                             )}
                         />
@@ -137,7 +168,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.description')}
+                                    label={t('projects.description')}
                                     fullWidth
                                     multiline
                                     rows={4}
@@ -145,14 +176,27 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                                     helperText={
                                         fieldState.error &&
                                         t(fieldState.error.message as string, {
-                                            field: t('createProject.description'),
+                                            field: t('projects.description'),
                                             count: 1000,
                                         })
                                     }
+                                    disabled={isSubmitting}
                                 />
                             )}
                         />
+                        {/* organizationId здесь скрыт, так как в демо версии не реализовано выбор организации */}
+                        <Controller
+                            name="organizationId"
+                            control={control}
+                            render={({ field }) => <input type="hidden" {...field} value={field.value} />}
+                        />
                     </Box>
+
+                    {error && (
+                        <Box mt={2}>
+                            <FormHelperText error>{error}</FormHelperText>
+                        </Box>
+                    )}
                 </DialogContent>
                 <DialogActions
                     sx={{
@@ -162,11 +206,17 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                         gap: 1,
                     }}
                 >
-                    <Button onClick={handleClose} color="inherit">
+                    <Button onClick={handleClose} color="inherit" disabled={isSubmitting}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                        {isSubmitting ? t('common.loading') : t('common.create')}
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isSubmitting || Object.keys(errors).length > 0}
+                        startIcon={isSubmitting ? <CircularProgress size={18} color="inherit" /> : undefined}
+                    >
+                        {isSubmitting ? t('common.saving') : isEditMode ? t('common.save') : t('common.create')}
                     </Button>
                 </DialogActions>
             </form>

@@ -1,22 +1,3 @@
-export interface Project {
-    id: string;
-    name: string;
-    code: string;
-    description: string;
-    organizationId: string;
-    createdAt: string;
-    updatedAt: string;
-    users?: User[];
-    testCases?: number;
-    suites?: number;
-    activeRuns?: number;
-    unresolved?: number;
-    testRuns?: number;
-    milestones?: number;
-}
+export type { ProjectResponseDto, ProjectRequestDto, ProjectUserDto, ProjectWithStats } from '@services/api/models';
 
-export interface User {
-    id: string;
-    name: string;
-    avatar?: string;
-}
+export { mapProjectToUI } from '@services/api/models';

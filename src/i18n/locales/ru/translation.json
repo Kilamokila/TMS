@@ -12,7 +12,9 @@
         "active": "Активный",
         "inactive": "Неактивный",
         "add": "Добавить",
-        "remove": "Удалить"
+        "remove": "Удалить",
+        "saving": "Сохранение...",
+        "deleting": "Удаление..."
     },
     "languages": {
         "en": "Английский",
@@ -30,7 +32,6 @@
         "searchProjects": "Поиск проектов",
         "addFilter": "Добавить фильтр",
         "statusActive": "Статус: Активный",
-        "projectName": "НАЗВАНИЕ ПРОЕКТА",
         "unresolvedDefects": "НЕРЕШЕННЫЕ ДЕФЕКТЫ",
         "testRuns": "ТЕСТОВЫЕ ПРОГОНЫ",
         "milestones": "ВЕХИ",
@@ -41,7 +42,22 @@
         "activeRunsCount": "{{count}} активных прогонов",
         "deleteProjectConfirm": "Вы уверены, что хотите удалить этот проект?",
         "projectDeleted": "Проект успешно удален",
-        "rowsPerPage": "Строк на странице:"
+        "rowsPerPage": "Строк на странице:",
+        "viewAsList": "Отображать списком",
+        "viewAsGrid": "Отображать сеткой",
+        "projectCreated": "Проект успешно создан",
+        "projectUpdated": "Проект успешно обновлен",
+        "projectDeleted": "Проект успешно удален",
+        "deleteProject": "Удалить проект",
+        "deleteProjectConfirm": "Вы уверены, что хотите удалить этот проект?",
+        "deleteProjectWarning": "Это действие нельзя отменить. Все тест-кейсы, прогоны и данные, связанные с этим проектом, будут безвозвратно удалены.",
+        "noProjectsFound": "Проекты не найдены",
+        "noIssues": "Нет проблем",
+        "noMembers": "Нет участников",
+        "actionsForProject": "Действия для проекта {{name}}",
+        "editProject": "Редактировать проект",
+        "createProject": "Создать новый проект",
+        "codeCannotBeChanged": "Код проекта нельзя изменить после создания"
     },
     "createProject": {
         "title": "Создание нового проекта",
