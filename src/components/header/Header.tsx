@@ -57,9 +57,6 @@ export const Header: React.FC = () => {
                     <Link to={`/${ROUTES.WORKSPACE}`} className={styles.navLink}>
                         {t('header.workspace')}
                     </Link>
-                    <Link to={`/${ROUTES.TEST_RUNS}`} className={styles.navLink}>
-                        {t('testRuns.title')}
-                    </Link>
                 </nav>
                 <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                     <IconButton
