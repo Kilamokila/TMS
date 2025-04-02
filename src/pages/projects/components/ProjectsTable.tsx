@@ -1,4 +1,3 @@
-// src/pages/projects/components/ProjectsTable.tsx
 import React from 'react';
 import {
     Table,

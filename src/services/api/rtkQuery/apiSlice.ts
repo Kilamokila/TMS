@@ -1,18 +1,17 @@
-// src/services/api/rtkQuery/apiSlice.ts
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { ApiError } from '../models';
-
-// Базовый URL API
-const BASE_URL = 'http://147.45.245.28:31433/api/v1';
+import { LocalStorageUtil } from '@services/storage';
+import { EStorageKeys } from '@services/storage/storageKeys';
+import { API_URL } from '@constants/environment';
 
 // Базовый API клиент
 export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: BASE_URL,
+        baseUrl: API_URL,
         prepareHeaders: (headers) => {
             // Здесь можно добавить авторизацию и другие общие заголовки
-            const token = localStorage.getItem('token');
+            const token = LocalStorageUtil.getItem<string>(EStorageKeys.TOKEN);
 
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
