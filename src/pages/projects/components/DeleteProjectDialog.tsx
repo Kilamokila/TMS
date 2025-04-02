@@ -1,4 +1,3 @@
-// src/pages/projects/components/DeleteProjectDialog.tsx
 import React from 'react';
 import {
     Dialog,
