@@ -1,6 +1,7 @@
 export interface TestRun {
     id: string;
     title: string;
+    description?: string;
     status: TestRunStatus;
     author: {
         id: string;

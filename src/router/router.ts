@@ -9,6 +9,18 @@ const rootRoute = createRootRoute({
     component: AppLayout,
 });
 
+const indexRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/',
+    component: () => {
+        // Можно использовать React Router Navigate, но TanStack Router
+        // использует другой механизм перенаправления
+        window.location.href = `/${ROUTES.PROJECTS}`;
+
+        return null;
+    },
+});
+
 const projectsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: ROUTES.PROJECTS,
@@ -27,6 +39,6 @@ const testRunsRoute = createRoute({
     component: TestRuns,
 });
 
-const routeTree = rootRoute.addChildren([projectsRoute, workspaceRoute, testRunsRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, projectsRoute, workspaceRoute, testRunsRoute]);
 
 export const router = createRouter({ routeTree });

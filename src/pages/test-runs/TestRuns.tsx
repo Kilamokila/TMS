@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, InputAdornment } from '@mui/material';
+import { Box, Typography, Button, TextField, InputAdornment, Snackbar, Alert } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
-// import { TestRunsTable, NewTestRunModal, TestRunFormData } from './components';
 import { TestRunsTable } from './components/TestRunsTable';
 import { NewTestRunModal } from './components/NewTestRunModal';
 import { TestRunFormData } from './components/NewTestRunModal';
+import { EditTestRunData } from './components/EditTestRunModal';
 import { MOCK_TEST_RUNS } from './model/testRun';
+import { TestRun } from './model/testRun';
 
 export const TestRuns: React.FC = () => {
-    //  const theme = useTheme();
     const { t } = useTranslation();
     const [searchValue, setSearchValue] = useState('');
     const [isNewTestRunModalOpen, setIsNewTestRunModalOpen] = useState(false);
 
-    // В реальном приложении здесь будет логика загрузки данных с API
-    const testRuns = MOCK_TEST_RUNS;
+    // Состояние для списка тестовых прогонов и уведомлений
+    const [testRuns, setTestRuns] = useState<TestRun[]>(MOCK_TEST_RUNS);
+    const [notification, setNotification] = useState<{
+        open: boolean;
+        message: string;
+        severity: 'success' | 'error' | 'info' | 'warning';
+    }>({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(event.target.value);
@@ -31,14 +40,85 @@ export const TestRuns: React.FC = () => {
     };
 
     const handleCreateTestRun = (data: TestRunFormData) => {
-        console.log('New test run data:', data);
-        // Здесь будет логика для сохранения нового тестового прогона
+        // Здесь была бы логика для сохранения нового тестового прогона через API
+        // Сейчас просто добавляем в состояние с моковыми данными
+        const newTestRun: TestRun = {
+            id: `${Date.now()}`, // Генерируем уникальный ID
+            title: data.title,
+            description: data.description,
+            status: 'inProgress',
+            author: {
+                id: '1',
+                name: 'Roman 777',
+            },
+            environment: data.environment || 'Not specified',
+            totalTime: 0,
+            elapsedTime: 0,
+            startedAt: new Date().toISOString(),
+            stats: {
+                total: 0,
+                passed: 0,
+                failed: 0,
+                blocked: 0,
+                skipped: 0,
+                invalid: 0,
+            },
+        };
+
+        setTestRuns((prev) => [newTestRun, ...prev]);
         setIsNewTestRunModalOpen(false);
+
+        // Показываем уведомление
+        setNotification({
+            open: true,
+            message: t('testRuns.notifications.created'),
+            severity: 'success',
+        });
+    };
+
+    const handleEditTestRun = (testRun: TestRun, data: EditTestRunData) => {
+        // Обновляем тестовый прогон
+        setTestRuns((prev) =>
+            prev.map((run) =>
+                run.id === testRun.id
+                    ? {
+                          ...run,
+                          title: data.title,
+                          description: data.description || run.description,
+                          environment: data.environment,
+                          status: data.status,
+                      }
+                    : run,
+            ),
+        );
+
+        // Показываем уведомление
+        setNotification({
+            open: true,
+            message: t('testRuns.notifications.updated'),
+            severity: 'success',
+        });
+    };
+
+    const handleDeleteTestRun = (testRun: TestRun) => {
+        // Удаляем тестовый прогон
+        setTestRuns((prev) => prev.filter((run) => run.id !== testRun.id));
+
+        // Показываем уведомление
+        setNotification({
+            open: true,
+            message: t('testRuns.notifications.deleted'),
+            severity: 'success',
+        });
     };
 
     const handleAddFilter = () => {
         // Логика для добавления фильтра
         console.log('Add filter clicked');
+    };
+
+    const handleCloseNotification = () => {
+        setNotification((prev) => ({ ...prev, open: false }));
     };
 
     return (
@@ -73,13 +153,34 @@ export const TestRuns: React.FC = () => {
                 </Button>
             </Box>
 
-            <TestRunsTable testRuns={testRuns} />
+            <TestRunsTable
+                testRuns={testRuns}
+                onEditTestRun={handleEditTestRun}
+                onDeleteTestRun={handleDeleteTestRun}
+            />
 
             <NewTestRunModal
                 open={isNewTestRunModalOpen}
                 onClose={handleCloseNewTestRunModal}
                 onSubmit={handleCreateTestRun}
             />
+
+            {/* Уведомления */}
+            <Snackbar
+                open={notification.open}
+                autoHideDuration={5000}
+                onClose={handleCloseNotification}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseNotification}
+                    severity={notification.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {notification.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

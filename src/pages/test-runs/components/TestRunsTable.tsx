@@ -14,22 +14,39 @@ import {
     Chip,
     Menu,
     MenuItem,
+    ListItemIcon,
+    ListItemText,
 } from '@mui/material';
 import { TestRun, TestRunStatus } from '../model/testRun';
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { TestRunStatsBar } from './TestRunStatsBar';
+import { EditTestRunModal } from './EditTestRunModal';
+import { DeleteTestRunModal } from './DeleteTestRunModal';
 
 interface TestRunsTableProps {
     testRuns: TestRun[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onEditTestRun?: (testRun: TestRun, data: any) => void;
+    onDeleteTestRun?: (testRun: TestRun) => void;
 }
 
-export const TestRunsTable: React.FC<TestRunsTableProps> = ({ testRuns }) => {
+export const TestRunsTable: React.FC<TestRunsTableProps> = ({
+    testRuns,
+    onEditTestRun = () => {},
+    onDeleteTestRun = () => {},
+}) => {
     const { t } = useTranslation();
     const [selectedRuns, setSelectedRuns] = useState<string[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+    const [, setSelectedRunId] = useState<string | null>(null);
+
+    // Состояния для модальных окон
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedTestRun, setSelectedTestRun] = useState<TestRun | null>(null);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
@@ -52,14 +69,42 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({ testRuns }) => {
         setSelectedRuns(newSelected);
     };
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, runId: string) => {
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, run: TestRun) => {
         setAnchorEl(event.currentTarget);
-        setSelectedRunId(runId);
+        setSelectedRunId(run.id);
+        setSelectedTestRun(run);
     };
 
     const handleMenuClose = () => {
         setAnchorEl(null);
         setSelectedRunId(null);
+    };
+
+    const handleEdit = () => {
+        handleMenuClose();
+        setIsEditModalOpen(true);
+    };
+
+    const handleDelete = () => {
+        handleMenuClose();
+        setIsDeleteModalOpen(true);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleEditConfirm = (data: any) => {
+        if (selectedTestRun) {
+            onEditTestRun(selectedTestRun, data);
+        }
+
+        setIsEditModalOpen(false);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (selectedTestRun) {
+            onDeleteTestRun(selectedTestRun);
+        }
+
+        setIsDeleteModalOpen(false);
     };
 
     const formatTime = (seconds: number): string => {
@@ -213,7 +258,11 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({ testRuns }) => {
                                         </Box>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <IconButton size="small" onClick={(event) => handleMenuOpen(event, run.id)}>
+                                        <IconButton
+                                            size="small"
+                                            onClick={(event) => handleMenuOpen(event, run)}
+                                            aria-label={t('testRuns.menu.tooltip')}
+                                        >
                                             <MoreVertIcon />
                                         </IconButton>
                                     </TableCell>
@@ -224,6 +273,7 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({ testRuns }) => {
                 </Table>
             </TableContainer>
 
+            {/* Меню с действиями */}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -237,9 +287,39 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({ testRuns }) => {
                     horizontal: 'right',
                 }}
             >
-                <MenuItem onClick={handleMenuClose}>{t('common.edit')}</MenuItem>
-                <MenuItem onClick={handleMenuClose}>{t('common.delete')}</MenuItem>
+                <MenuItem onClick={handleEdit}>
+                    <ListItemIcon>
+                        <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{t('common.edit')}</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handleDelete}>
+                    <ListItemIcon>
+                        <DeleteIcon fontSize="small" color="error" />
+                    </ListItemIcon>
+                    <ListItemText sx={{ color: 'error.main' }}>{t('common.delete')}</ListItemText>
+                </MenuItem>
             </Menu>
+
+            {/* Модальное окно для редактирования */}
+            {selectedTestRun && (
+                <EditTestRunModal
+                    open={isEditModalOpen}
+                    testRun={selectedTestRun}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSubmit={handleEditConfirm}
+                />
+            )}
+
+            {/* Модальное окно для подтверждения удаления */}
+            {selectedTestRun && (
+                <DeleteTestRunModal
+                    open={isDeleteModalOpen}
+                    testRun={selectedTestRun}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onConfirm={handleDeleteConfirm}
+                />
+            )}
         </>
     );
 };

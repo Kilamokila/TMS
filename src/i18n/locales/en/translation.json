@@ -142,6 +142,27 @@
             "selectCases": "Select cases",
             "businessPlanFeature": "This feature is a available on a Business plan and higher",
             "startRun": "Start a run"
+        },
+        "menu": {
+            "tooltip": "Actions"
+        },
+        "edit": {
+            "title": "Edit test run",
+            "titleLabel": "Title",
+            "descriptionLabel": "Description",
+            "statusLabel": "Status",
+            "environmentLabel": "Environment",
+            "helpText": "Changes will be applied immediately after saving."
+        },
+        "delete": {
+            "title": "Delete test run",
+            "confirmMessage": "Are you sure you want to delete this test run?",
+            "warningMessage": "This action cannot be undone. All test results will be permanently deleted."
+        },
+        "notifications": {
+            "created": "Test run created successfully",
+            "updated": "Test run updated successfully",
+            "deleted": "Test run deleted successfully"
         }
     }
 }
