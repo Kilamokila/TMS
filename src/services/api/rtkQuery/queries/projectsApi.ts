@@ -1,4 +1,3 @@
-// src/services/api/rtkQuery/queries/projectsApi.ts
 import { apiSlice } from '../apiSlice';
 import { ProjectRequestDto, ProjectResponseDto, PageProjectResponseDto, ProjectsQueryParams } from '../../models';
 

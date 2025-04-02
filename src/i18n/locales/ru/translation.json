@@ -34,6 +34,7 @@
         "statusActive": "Статус: Активный",
         "unresolvedDefects": "НЕРЕШЕННЫЕ ДЕФЕКТЫ",
         "testRuns": "ТЕСТОВЫЕ ПРОГОНЫ",
+        "projectName": "НАЗВАНИЕ ПРОЕКТА",
         "milestones": "ВЕХИ",
         "teamMembers": "УЧАСТНИКИ",
         "openIssues": "{{count}} открытых проблем",
