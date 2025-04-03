@@ -36,8 +36,8 @@ export const Projects: React.FC = () => {
 
     // Состояние для меню
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+
+    const [, setSelectedProjectId] = useState<number | null>(null);
 
     // Состояние для уведомлений
     const [notification, setNotification] = useState<{

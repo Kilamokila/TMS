@@ -54,7 +54,7 @@ export const projectsApi = apiSlice.injectEndpoints({
         // Получение проекта по ID
         getProjectById: builder.query<ProjectResponseDto, number>({
             query: (id) => `projects/${id}`,
-            providesTags: (result, error, id) => [{ type: 'Project', id }],
+            providesTags: (_, __, id) => [{ type: 'Project', id }],
         }),
 
         // Создание нового проекта
@@ -79,7 +79,7 @@ export const projectsApi = apiSlice.injectEndpoints({
                 body: data,
             }),
             // Инвалидация как конкретного проекта, так и списка
-            invalidatesTags: (result, error, { id }) => [
+            invalidatesTags: (result, _, { id }) => [
                 { type: 'Project', id },
                 { type: 'Project', id: 'LIST' },
                 { type: 'Organization', id: result?.organizationId },
@@ -93,7 +93,7 @@ export const projectsApi = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
             // Инвалидация списка проектов и потенциально связанных сущностей
-            invalidatesTags: (result, error, id) => [
+            invalidatesTags: (_, __, id) => [
                 { type: 'Project', id: 'LIST' },
                 { type: 'Project', id },
                 { type: 'TestPlan', id: 'LIST' },
