@@ -21,15 +21,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FolderIcon from '@mui/icons-material/Folder';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import SettingsIcon from '@mui/icons-material/Settings';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import DescriptionIcon from '@mui/icons-material/Description';
-import BuildIcon from '@mui/icons-material/Build';
-import ListIcon from '@mui/icons-material/List';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import ComputerIcon from '@mui/icons-material/Computer';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
@@ -67,7 +60,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
 
@@ -85,14 +77,6 @@ const StyledDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
         '& .MuiDrawer-paper': closedMixin(theme),
     }),
 }));
-
-// const SectionHeader = styled(Typography)(({ theme }) => ({
-//     padding: theme.spacing(2, 2, 0.5, 2),
-//     fontSize: '0.75rem',
-//     fontWeight: 700,
-//     color: theme.palette.text.secondary,
-//     letterSpacing: '0.08em',
-// }));
 
 // Interface for sidebar menu items
 interface SidebarMenuItem {
@@ -115,13 +99,11 @@ export const Sidebar: React.FC = () => {
     const [open, setOpen] = useState(true);
     const { t } = useTranslation();
     const location = useLocation();
-    // const theme = useTheme();
 
     // State for open/closed sections
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({
         tests: true,
         execution: true,
-        issues: true,
     });
 
     const handleDrawerToggle = () => {
@@ -135,7 +117,7 @@ export const Sidebar: React.FC = () => {
         }));
     };
 
-    // Define sidebar menu structure
+    // Define sidebar menu structure - упрощенная версия
     const sidebarSections: SidebarSection[] = [
         {
             id: 'tests',
@@ -146,12 +128,6 @@ export const Sidebar: React.FC = () => {
                     label: t('sidebar.repository'),
                     icon: <FolderIcon />,
                     path: `/${ROUTES.WORKSPACE}/repository`,
-                },
-                {
-                    id: 'sharedSteps',
-                    label: t('sidebar.sharedSteps'),
-                    icon: <ListIcon />,
-                    path: `/${ROUTES.WORKSPACE}/shared-steps`,
                 },
             ],
         },
@@ -164,48 +140,6 @@ export const Sidebar: React.FC = () => {
                     label: t('sidebar.testRuns'),
                     icon: <PlayArrowIcon />,
                     path: `/${ROUTES.TEST_RUNS}`,
-                },
-                {
-                    id: 'testPlans',
-                    label: t('sidebar.testPlans'),
-                    icon: <AssignmentIcon />,
-                    path: `/${ROUTES.WORKSPACE}/test-plans`,
-                },
-                {
-                    id: 'configurations',
-                    label: t('sidebar.configurations'),
-                    icon: <BuildIcon />,
-                    path: `/${ROUTES.WORKSPACE}/configurations`,
-                },
-                {
-                    id: 'environments',
-                    label: t('sidebar.environments'),
-                    icon: <ComputerIcon />,
-                    path: `/${ROUTES.WORKSPACE}/environments`,
-                },
-            ],
-        },
-        {
-            id: 'issues',
-            label: t('sidebar.issues'),
-            items: [
-                {
-                    id: 'defects',
-                    label: t('sidebar.defects'),
-                    icon: <BugReportIcon />,
-                    path: `/${ROUTES.WORKSPACE}/defects`,
-                },
-                {
-                    id: 'requirements',
-                    label: t('sidebar.requirements'),
-                    icon: <DescriptionIcon />,
-                    path: `/${ROUTES.WORKSPACE}/requirements`,
-                },
-                {
-                    id: 'milestones',
-                    label: t('sidebar.milestones'),
-                    icon: <AssignmentTurnedInIcon />,
-                    path: `/${ROUTES.WORKSPACE}/milestones`,
                 },
             ],
         },
@@ -225,7 +159,7 @@ export const Sidebar: React.FC = () => {
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
-                                px: open ? 4 : 2.5, // Больший отступ для подпунктов в открытом меню
+                                px: open ? 4 : 2.5,
                                 ...(isActive && {
                                     backgroundColor: 'action.selected',
                                     '&:hover': {
@@ -389,7 +323,7 @@ export const Sidebar: React.FC = () => {
 
             <Divider sx={{ my: 1 }} />
 
-            {/* Render all collapsible sections */}
+            {/* Render only the two sections we need */}
             {sidebarSections.map(renderSection)}
 
             <Divider sx={{ my: 1 }} />
