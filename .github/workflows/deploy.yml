@@ -2,11 +2,11 @@ name: Build and Deploy Frontend
 
 on:
   push:
-    branches: [ main, master, develop ]  # Измените на ваши основные ветки
+    branches: [ main, master, develop ]
     paths:
-      - '**'  # Реагировать на все изменения
-      - '!README.md'  # Игнорировать изменения в README
-      - '!.github/**'  # Игнорировать другие GitHub файлы
+      - '**'
+      - '!README.md'
+      - '!.github/**'
 
 jobs:
   build-and-deploy:
@@ -32,12 +32,19 @@ jobs:
           platforms: linux/amd64
           tags: ershovone/commit-tms-fe:latest
 
-      - name: Set up kubectl
+      - name: Install kubectl
         uses: azure/setup-kubectl@v3
-        
-      - name: Deploy to Kubernetes
+
+      - name: Configure kubectl
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
-          export KUBECONFIG=kubeconfig
+          chmod 600 kubeconfig
+          
+      - name: Deploy to Kubernetes
+        run: |
+          export KUBECONFIG="${GITHUB_WORKSPACE}/kubeconfig"
           kubectl rollout restart deployment commit-tms-fe -n commit-tms-be
-          rm kubeconfig
+          
+      - name: Cleanup
+        run: rm kubeconfig
+        if: always()
