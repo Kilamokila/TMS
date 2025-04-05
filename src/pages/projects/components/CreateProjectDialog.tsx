@@ -81,7 +81,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                     borderBottom: `1px solid ${theme.palette.divider}`,
                 }}
             >
-                <Typography variant="h6">{t('createProject.title')}</Typography>
+                <Typography variant="inherit">{t('projects.projectCreate.title')}</Typography>
                 <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
                     <CloseIcon />
                 </IconButton>
@@ -95,14 +95,14 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.projectName')}
+                                    label={t('projects.projectCreate.projectName')}
                                     fullWidth
                                     required
                                     error={!!fieldState.error}
                                     helperText={
                                         fieldState.error &&
                                         t(fieldState.error.message as string, {
-                                            field: t('createProject.projectName'),
+                                            field: t('projects.projectCreate.createProject.projectName'),
                                             count: 100,
                                         })
                                     }
@@ -115,17 +115,17 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.projectCode')}
+                                    label={t('projects.projectCreate.projectCode')}
                                     fullWidth
                                     required
                                     error={!!fieldState.error}
                                     helperText={
                                         fieldState.error
                                             ? t(fieldState.error.message as string, {
-                                                  field: t('createProject.projectCode'),
+                                                  field: t('projects.projectCreate.projectCode'),
                                                   count: 16,
                                               })
-                                            : t('createProject.codeHint')
+                                            : t('projects.projectCreate.codeHint')
                                     }
                                 />
                             )}
@@ -136,7 +136,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    label={t('createProject.description')}
+                                    label={t('projects.projectCreate.description')}
                                     fullWidth
                                     multiline
                                     rows={4}
@@ -144,7 +144,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                                     helperText={
                                         fieldState.error &&
                                         t(fieldState.error.message as string, {
-                                            field: t('createProject.description'),
+                                            field: t('projects.projectCreate.description'),
                                             count: 1000,
                                         })
                                     }

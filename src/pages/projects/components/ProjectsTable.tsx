@@ -10,14 +10,12 @@ import {
     Paper,
     Typography,
     Box,
-    Chip,
     IconButton,
     Skeleton,
     useTheme,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ProjectWithStats } from '../model/project';
 
 interface ProjectsTableProps {
@@ -71,9 +69,7 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                     <TableHead>
                         <TableRow>
                             <TableCell>{t('projects.projectName')}</TableCell>
-                            <TableCell>{t('projects.unresolvedDefects')}</TableCell>
                             <TableCell>{t('projects.testRuns')}</TableCell>
-                            <TableCell>{t('projects.milestones')}</TableCell>
                             <TableCell>{t('projects.teamMembers')}</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
@@ -94,12 +90,6 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                             <Skeleton variant="text" width="80%" />
                                         </Box>
                                     </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Skeleton variant="text" width={100} />
-                                </TableCell>
-                                <TableCell>
-                                    <Skeleton variant="text" width={80} />
                                 </TableCell>
                                 <TableCell>
                                     <Skeleton variant="text" width={80} />
@@ -124,9 +114,7 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                 <TableHead>
                     <TableRow>
                         <TableCell>{renderSortLabel('name', t('projects.projectName'))}</TableCell>
-                        <TableCell>{t('projects.unresolvedDefects')}</TableCell>
                         <TableCell>{t('projects.testRuns')}</TableCell>
-                        <TableCell>{t('projects.milestones')}</TableCell>
                         <TableCell>{t('projects.teamMembers')}</TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
@@ -162,28 +150,8 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                 </Box>
                             </TableCell>
                             <TableCell>
-                                {project.unresolved && project.unresolved > 0 ? (
-                                    <Chip
-                                        icon={<WarningAmberIcon />}
-                                        label={t('projects.openIssues', { count: project.unresolved })}
-                                        color="warning"
-                                        size="small"
-                                        variant="outlined"
-                                    />
-                                ) : (
-                                    <Typography variant="body2" color="textSecondary">
-                                        {t('projects.noIssues')}
-                                    </Typography>
-                                )}
-                            </TableCell>
-                            <TableCell>
                                 <Typography variant="body2">
                                     {project.testRuns || 0} {t('projects.testRuns').toLowerCase()}
-                                </Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography variant="body2">
-                                    {project.milestones || 0} {t('projects.milestones').toLowerCase()}
                                 </Typography>
                             </TableCell>
                             <TableCell>
@@ -251,7 +219,7 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                     ))}
                     {projects.length === 0 && (
                         <TableRow>
-                            <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
+                            <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
                                 <Typography variant="body1" color="textSecondary">
                                     {t('projects.noProjectsFound')}
                                 </Typography>
