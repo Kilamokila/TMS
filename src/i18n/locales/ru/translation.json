@@ -32,17 +32,14 @@
         "searchProjects": "Поиск проектов",
         "addFilter": "Добавить фильтр",
         "statusActive": "Статус: Активный",
-        "unresolvedDefects": "Нерешенные Дефекты",
-        "testRuns": "ТЕСТОВЫЕ ПРОГОНЫ",
-        "projectName": "Название Проекта",
+        "testRuns": "Тестовые прогоны",
+        "projectName": "Название проекта",
         "milestones": "ВЕХИ",
-        "teamMembers": "УЧАСТНИКИ",
+        "teamMembers": "Участники",
         "openIssues": "{{count}} открытых проблем",
         "testCasesCount": "{{count}} тестовых сценариев",
         "suitesCount": "{{count}} наборов",
         "activeRunsCount": "{{count}} активных прогонов",
-        "deleteProjectConfirm": "Вы уверены, что хотите удалить этот проект?",
-        "projectDeleted": "Проект успешно удален",
         "rowsPerPage": "Строк на странице:",
         "viewAsList": "Отображать списком",
         "viewAsGrid": "Отображать сеткой",
@@ -58,17 +55,21 @@
         "actionsForProject": "Действия для проекта {{name}}",
         "editProject": "Редактировать проект",
         "createProject": "Создать новый проект",
-        "codeCannotBeChanged": "Код проекта нельзя изменить после создания"
-    },
-    "createProject": {
-        "title": "Создание нового проекта",
-        "projectName": "Название проекта",
+        "codeCannotBeChanged": "Код проекта нельзя изменить после создания",
+        "codeExists": "Проект с таким кодом уже существует",
+        "nameHolder": "Например: Веб-приложение",
+        "codeHolder": "Например: WA",
+        "descriptionHolder": "Введите описание проекта",
         "projectCode": "Код проекта",
-        "description": "Описание",
         "codeHint": "Этот код будет использоваться в URL и не может быть изменен позже",
-        "nameRequired": "Название проекта обязательно",
-        "codeRequired": "Код проекта обязателен",
-        "success": "Проект успешно создан"
+        "description": "Описание",
+        "projectCreate": {
+            "title": "Создание нового проекта",
+            "projectName": "Название проекта",
+            "nameRequired": "Название проекта обязательно",
+            "codeRequired": "Код проекта обязателен",
+            "success": "Проект успешно создан"
+        }
     },
     "sidebar": {
         "tests": "ТЕСТЫ",
@@ -89,14 +90,14 @@
         "collapseMenu": "Свернуть меню"
     },
     "validation": {
-        "required": "{{field}} обязательно для заполнения",
-        "minLength": "{{field}} должно содержать не менее {{count}} символов",
-        "maxLength": "{{field}} должно содержать не более {{count}} символов",
-        "pattern": "{{field}} имеет неверный формат",
+        "required": "Поле обязательно для заполнения",
+        "minLength": "В поле для ввода должно содержать не менее {{count}} символов",
+        "maxLength": "В поле для ввода должно содержать не более {{count}} символов",
+        "pattern": "Поле имеет неверный формат",
         "email": "Укажите действительный адрес электронной почты",
         "url": "Укажите действительный URL",
         "unique": "{{field}} должно быть уникальным",
-        "invalidType": "Неверный тип значения для {{field}}"
+        "invalidType": "Неверный тип значения для поля ввода"
     },
     "testRuns": {
         "title": "Тестовые прогоны",

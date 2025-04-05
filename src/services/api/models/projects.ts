@@ -47,7 +47,6 @@ export interface ProjectWithStats extends ProjectResponseDto {
     activeRuns?: number;
     unresolved?: number;
     testRuns?: number;
-    milestones?: number;
 }
 
 // Преобразователь данных API для UI
@@ -59,6 +58,5 @@ export const mapProjectToUI = (project: ProjectResponseDto): ProjectWithStats =>
         activeRuns: 0,
         unresolved: 0,
         testRuns: 0,
-        milestones: 0,
     };
 };

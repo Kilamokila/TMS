@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, IconButton, Skeleton, useTheme, Grid2 } from '@mui/material';
+import { Card, CardContent, Typography, Box, IconButton, Skeleton, useTheme, Grid2 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ProjectWithStats } from '../model/project';
 
 interface ProjectsGridProps {
@@ -105,27 +104,9 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, isLoading,
                             </Typography>
 
                             <Box mt="auto">
-                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                    {project.unresolved && project.unresolved > 0 ? (
-                                        <Chip
-                                            icon={<WarningAmberIcon />}
-                                            label={t('projects.openIssues', { count: project.unresolved })}
-                                            color="warning"
-                                            size="small"
-                                            variant="outlined"
-                                        />
-                                    ) : (
-                                        <Chip
-                                            label={t('projects.noIssues')}
-                                            size="small"
-                                            variant="outlined"
-                                            color="success"
-                                        />
-                                    )}
-
+                                <Box display="flex" justifyContent="flex-end" alignItems="center">
                                     <Typography variant="body2" color="textSecondary">
-                                        {project.testRuns || 0} {t('projects.testRuns').toLowerCase()} |{' '}
-                                        {project.milestones || 0} {t('projects.milestones').toLowerCase()}
+                                        {project.testRuns || 0} {t('projects.testRuns').toLowerCase()}
                                     </Typography>
                                 </Box>
                             </Box>
