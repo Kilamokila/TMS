@@ -3,7 +3,7 @@ import { ProjectRequestDto, ProjectResponseDto, PageProjectResponseDto, Projects
 
 // Построитель URL с параметрами запроса
 const buildQueryParams = (params: ProjectsQueryParams): string => {
-    const { page = 0, size = 10, ...filters } = params;
+    const { page = 0, size = 10, sort, name, code, organizationId } = params;
 
     // Начальные параметры пагинации
     const queryParams = new URLSearchParams({
@@ -12,18 +12,24 @@ const buildQueryParams = (params: ProjectsQueryParams): string => {
     });
 
     // Добавление сортировки
-    if (params.sort && params.sort.length > 0) {
-        params.sort.forEach((sortOption) => {
+    if (sort && sort.length > 0) {
+        sort.forEach((sortOption) => {
             queryParams.append('sort', sortOption);
         });
     }
 
     // Добавление фильтров
-    Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined) {
-            queryParams.append(key, value.toString());
-        }
-    });
+    if (name !== undefined && name.trim() !== '') {
+        queryParams.append('name', name);
+    }
+
+    if (code !== undefined && code.trim() !== '') {
+        queryParams.append('code', code);
+    }
+
+    if (organizationId !== undefined) {
+        queryParams.append('organizationId', organizationId.toString());
+    }
 
     return queryParams.toString();
 };
@@ -44,11 +50,6 @@ export const projectsApi = apiSlice.injectEndpoints({
                           { type: 'Project', id: 'LIST' },
                       ]
                     : [{ type: 'Project', id: 'LIST' }],
-            // Трансформация ответа (при необходимости)
-            transformResponse: (response: PageProjectResponseDto) => {
-                // Можно выполнить дополнительную обработку данных
-                return response;
-            },
         }),
 
         // Получение проекта по ID

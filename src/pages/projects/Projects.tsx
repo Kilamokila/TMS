@@ -1,7 +1,7 @@
-// src/pages/projects/Projects.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, TablePagination, Menu, MenuItem, Snackbar, Alert } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { debounce } from 'lodash-es';
 
 import { ProjectWithStats, mapProjectToUI, ProjectResponseDto } from '@services/api/models';
 
@@ -18,6 +18,10 @@ import {
     useDeleteProjectMutation,
     getErrorMessage,
 } from '@services/api/rtkQuery';
+
+const debounceTime = 700;
+
+const autoHideTime = 3000;
 
 export const Projects: React.FC = () => {
     const { t } = useTranslation();
@@ -50,15 +54,17 @@ export const Projects: React.FC = () => {
         severity: 'success',
     });
 
-    // RTK Query хуки
+    // RTK Query хук для получения проектов
     const {
         data: projectsPage,
         isLoading,
         error: fetchError,
+        refetch,
     } = useGetProjectsQuery({
         page,
         size: pageSize,
         sort: [`${sortField},${sortDirection}`],
+        name: searchValue,
     });
 
     const [createProject, { isLoading: isCreating, error: createError }] = useCreateProjectMutation();
@@ -94,10 +100,18 @@ export const Projects: React.FC = () => {
         setPage(0);
     };
 
-    // Обработчики для поиска и фильтрации
+    const debouncedSearch = useCallback(
+        debounce(() => {
+            setPage(0); // Сбрасываем на первую страницу при изменении поиска
+            refetch(); // Перезапрашиваем данные с новыми параметрами
+        }, debounceTime),
+        [refetch],
+    );
+
+    // Обработчик для поиска
     const handleSearchChange = (value: string) => {
         setSearchValue(value);
-        // TODO: Реализовать поиск через API
+        debouncedSearch();
     };
 
     // Обработчик сортировки
@@ -145,14 +159,18 @@ export const Projects: React.FC = () => {
             await createProject(requestData).unwrap();
             setIsCreateDialogOpen(false);
             showNotification(t('projects.projectCreated'), 'success');
+
+            return true; // Успешное создание
         } catch (error) {
             console.error('Failed to create project:', error);
             showNotification(getErrorMessage(error), 'error');
+
+            return false; // Ошибка создания
         }
     };
 
     const handleUpdateProject = async (data: ProjectFormData) => {
-        if (!selectedProject) return;
+        if (!selectedProject) return false;
 
         try {
             const requestData = mapFormToRequest(data);
@@ -160,9 +178,13 @@ export const Projects: React.FC = () => {
             await updateProject({ id: selectedProject.id, data: requestData }).unwrap();
             setIsEditDialogOpen(false);
             showNotification(t('projects.projectUpdated'), 'success');
+
+            return true; // Успешное обновление
         } catch (error) {
             console.error('Failed to update project:', error);
             showNotification(getErrorMessage(error), 'error');
+
+            return false; // Ошибка обновления
         }
     };
 
@@ -287,9 +309,9 @@ export const Projects: React.FC = () => {
             {/* Уведомления */}
             <Snackbar
                 open={notification.open}
-                autoHideDuration={6000}
+                autoHideDuration={autoHideTime}
                 onClose={() => setNotification({ ...notification, open: false })}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
                 <Alert
                     onClose={() => setNotification({ ...notification, open: false })}

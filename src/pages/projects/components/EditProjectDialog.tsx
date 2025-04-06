@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ interface EditProjectDialogProps {
     open: boolean;
     project?: ProjectResponseDto;
     onClose: () => void;
-    onSubmit: (data: ProjectFormData) => Promise<void>;
+    onSubmit: (data: ProjectFormData) => Promise<boolean>;
     isSubmitting: boolean;
     error?: string;
 }
@@ -39,6 +39,7 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
 }) => {
     const theme = useTheme();
     const { t } = useTranslation();
+    const [codeError, setCodeError] = useState<string | null>(null);
 
     const {
         control,
@@ -65,20 +66,44 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                 description: project.description || '',
                 organizationId: project.organizationId,
             });
+        } else if (open && !project) {
+            // Сбрасываем форму при открытии диалога создания
+            reset({
+                name: '',
+                code: '',
+                description: '',
+                organizationId: 1,
+            });
         }
     }, [project, open, reset]);
 
+    // Проверяем, содержит ли ошибка информацию о дублировании кода проекта
+    useEffect(() => {
+        if (error && error.toLowerCase().includes('код') && error.toLowerCase().includes('существует')) {
+            setCodeError(t('projects.codeExists'));
+        } else if (error && error.toLowerCase().includes('code') && error.toLowerCase().includes('exist')) {
+            setCodeError(t('projects.codeExists'));
+        } else {
+            setCodeError(null);
+        }
+    }, [error, t]);
+
     const handleFormSubmit: SubmitHandler<ProjectFormData> = async (data) => {
         try {
-            await onSubmit(data);
+            const success = await onSubmit(data);
+
+            // Только если операция успешна, сбрасываем форму и закрываем диалог
+            if (success) {
+                reset();
+                onClose();
+            }
         } catch (error) {
-            console.error('Failed to update project:', error);
+            console.error('Failed to process project:', error);
         }
     };
 
     const handleClose = () => {
         if (!isSubmitting) {
-            reset();
             onClose();
         }
     };
@@ -107,7 +132,7 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                     borderBottom: `1px solid ${theme.palette.divider}`,
                 }}
             >
-                <Typography variant="h6">
+                <Typography variant="inherit">
                     {isEditMode ? t('projects.editProject') : t('projects.createProject')}
                 </Typography>
                 <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close" disabled={isSubmitting}>
@@ -124,6 +149,7 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                                 <TextField
                                     {...field}
                                     label={t('projects.projectName')}
+                                    placeholder={t('projects.nameHolder')}
                                     fullWidth
                                     required
                                     error={!!fieldState.error}
@@ -145,18 +171,21 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                                 <TextField
                                     {...field}
                                     label={t('projects.projectCode')}
+                                    placeholder={t('projects.codeHolder')}
                                     fullWidth
                                     required
-                                    error={!!fieldState.error}
+                                    error={!!fieldState.error || !!codeError}
                                     helperText={
-                                        fieldState.error
-                                            ? t(fieldState.error.message as string, {
-                                                  field: t('projects.projectCode'),
-                                                  count: 16,
-                                              })
-                                            : isEditMode
-                                              ? t('projects.codeCannotBeChanged')
-                                              : t('projects.codeHint')
+                                        codeError
+                                            ? codeError
+                                            : fieldState.error
+                                              ? t(fieldState.error.message as string, {
+                                                    field: t('projects.projectCode'),
+                                                    count: 16,
+                                                })
+                                              : isEditMode
+                                                ? t('projects.codeCannotBeChanged')
+                                                : t('projects.codeHint')
                                     }
                                     disabled={isEditMode || isSubmitting}
                                 />
@@ -169,6 +198,7 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                                 <TextField
                                     {...field}
                                     label={t('projects.description')}
+                                    placeholder={t('projects.descriptionHolder')}
                                     fullWidth
                                     multiline
                                     rows={4}
@@ -192,7 +222,7 @@ export const EditProjectDialog: React.FC<EditProjectDialogProps> = ({
                         />
                     </Box>
 
-                    {error && (
+                    {error && !codeError && (
                         <Box mt={2}>
                             <FormHelperText error>{error}</FormHelperText>
                         </Box>
