@@ -72,6 +72,65 @@
             "success": "Project created successfully"
         }
     },
+    "testCases": {
+        "repository": "Repository",
+        "createTestCase": "Create Test Case",
+        "editTestCase": "Edit Test Case",
+        "deleteTestCase": "Delete Test Case",
+        "searchTestCases": "Search for test cases",
+        "selectedCount": "{{count}} selected",
+        "noTestCasesFound": "No test cases found",
+        "deleteConfirmation": "Are you sure you want to delete this test case?",
+        "deleteWarning": "This action cannot be undone. All data associated with this test case will be permanently deleted.",
+        "noRunHistory": "No run history available for this test case",
+        "noChangeHistory": "No change history available for this test case",
+        "emptyState": {
+            "title": "No Test Cases Yet",
+            "description": "Create your first test case to start building your test repository. Test cases help you define and track your testing procedures."
+        },
+        "columns": {
+            "title": "TITLE",
+            "priority": "PRIORITY",
+            "status": "STATUS",
+            "actions": "ACTIONS"
+        },
+        "priority": {
+            "high": "High",
+            "medium": "Medium",
+            "low": "Low"
+        },
+        "status": {
+            "active": "Active",
+            "draft": "Draft",
+            "deprecated": "Deprecated"
+        },
+        "tabs": {
+            "general": "General",
+            "runHistory": "Run History",
+            "changeHistory": "Change History"
+        },
+        "form": {
+            "title": "Title",
+            "description": "Description",
+            "priority": "Priority",
+            "status": "Status",
+            "preConditions": "Pre-conditions",
+            "postConditions": "Post-conditions",
+            "testSteps": "Test Steps",
+            "addStep": "Add Step",
+            "addFirstStep": "Add First Step",
+            "noSteps": "No test steps added yet",
+            "step": "Step {{number}}",
+            "action": "Action",
+            "expectedResult": "Expected Result",
+            "testStepsError": "There are errors in one or more test steps"
+        },
+        "notifications": {
+            "created": "Test case created successfully",
+            "updated": "Test case updated successfully",
+            "deleted": "Test case deleted successfully"
+        }
+    },
     "sidebar": {
         "tests": "TESTS",
         "execution": "EXECUTION",

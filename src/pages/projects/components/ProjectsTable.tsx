@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import {
     Table,
     TableBody,
@@ -17,6 +17,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ProjectWithStats } from '../model/project';
+import { useNavigate } from '@tanstack/react-router';
+import { ROUTES } from '@router/routes';
 
 interface ProjectsTableProps {
     projects: ProjectWithStats[];
@@ -37,6 +39,11 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
 }) => {
     const theme = useTheme();
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const handleClick = (event: MouseEvent<HTMLDivElement>, project: ProjectWithStats) => {
+        navigate({ to: `/${ROUTES.PROJECT}/$projectId`, params: { projectId: project.id } });
+    };
 
     const handleSortRequest = (field: string) => {
         if (onSort) {
@@ -121,7 +128,12 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
                 </TableHead>
                 <TableBody>
                     {projects.map((project) => (
-                        <TableRow key={project.id} hover>
+                        <TableRow
+                            component="tr"
+                            onClick={(event) => handleClick(event, project)}
+                            key={project.id}
+                            hover
+                        >
                             <TableCell>
                                 <Box display="flex" alignItems="center">
                                     <Box

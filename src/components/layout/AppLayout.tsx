@@ -11,7 +11,8 @@ export const AppLayout: React.FC = () => {
     const currentPath = location.pathname.substring(1).split('/')[0]; // Получаем первый сегмент пути
 
     // Показываем сайдбар только для Workspace (Пространство)
-    const showSidebar = currentPath === ROUTES.WORKSPACE || currentPath === ROUTES.TEST_RUNS;
+    const showSidebar =
+        currentPath === ROUTES.WORKSPACE || currentPath === ROUTES.TEST_RUNS || currentPath === ROUTES.PROJECT;
 
     return (
         <Box className={`${styles.wrapper} ${!showSidebar ? styles.withoutSidebar : ''}`}>

@@ -1,32 +1,8 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
-import {
-    Box,
-    Drawer,
-    List,
-    Divider,
-    IconButton,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-    Collapse,
-} from '@mui/material';
-import { Link, useLocation } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-
-// Icons
+import { Box, Drawer, Divider, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FolderIcon from '@mui/icons-material/Folder';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
-import { ROUTES } from '@router/routes';
 
 const drawerWidth = 240;
 
@@ -78,278 +54,22 @@ const StyledDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
     }),
 }));
 
-// Interface for sidebar menu items
-interface SidebarMenuItem {
-    id: string;
-    label: string;
-    icon: React.ReactNode;
-    path?: string;
-    divider?: boolean;
-}
-
-// Interface for collapsible section
-interface SidebarSection {
-    id: string;
-    label: string;
-    icon?: React.ReactNode;
-    items: SidebarMenuItem[];
-}
-
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<PropsWithChildren> = ({ children }) => {
     const [open, setOpen] = useState(true);
-    const { t } = useTranslation();
-    const location = useLocation();
-
-    // State for open/closed sections
-    const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-        tests: true,
-        execution: true,
-    });
 
     const handleDrawerToggle = () => {
         setOpen(!open);
     };
 
-    const handleSectionToggle = (sectionId: string) => {
-        setOpenSections((prev) => ({
-            ...prev,
-            [sectionId]: !prev[sectionId],
-        }));
-    };
-
-    // Define sidebar menu structure - упрощенная версия
-    const sidebarSections: SidebarSection[] = [
-        {
-            id: 'tests',
-            label: t('sidebar.tests'),
-            items: [
-                {
-                    id: 'repository',
-                    label: t('sidebar.repository'),
-                    icon: <FolderIcon />,
-                    path: `/${ROUTES.WORKSPACE}/repository`,
-                },
-            ],
-        },
-        {
-            id: 'execution',
-            label: t('sidebar.execution'),
-            items: [
-                {
-                    id: 'testRuns',
-                    label: t('sidebar.testRuns'),
-                    icon: <PlayArrowIcon />,
-                    path: `/${ROUTES.TEST_RUNS}`,
-                },
-            ],
-        },
-    ];
-
-    // Helper to render a list of menu items
-    const renderMenuItems = (items: SidebarMenuItem[]) => {
-        return items.map((item) => {
-            const isActive = item.path ? location.pathname === item.path : false;
-
-            return (
-                <React.Fragment key={item.id}>
-                    <ListItem disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            component={item.path ? Link : 'div'}
-                            to={item.path}
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: open ? 4 : 2.5,
-                                ...(isActive && {
-                                    backgroundColor: 'action.selected',
-                                    '&:hover': {
-                                        backgroundColor: 'action.selected',
-                                    },
-                                }),
-                            }}
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                    color: isActive ? 'primary.main' : 'inherit',
-                                }}
-                            >
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={item.label}
-                                sx={{
-                                    opacity: open ? 1 : 0,
-                                    color: isActive ? 'primary.main' : 'inherit',
-                                }}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                    {item.divider && <Divider sx={{ my: 1 }} />}
-                </React.Fragment>
-            );
-        });
-    };
-
-    // Render collapsible section
-    const renderSection = (section: SidebarSection) => {
-        const isOpen = openSections[section.id];
-        const hasActiveItem = section.items.some((item) => item.path && location.pathname === item.path);
-
-        return (
-            <React.Fragment key={section.id}>
-                <ListItem
-                    disablePadding
-                    sx={{
-                        display: 'block',
-                        backgroundColor: hasActiveItem && !open ? 'action.selected' : 'transparent',
-                    }}
-                >
-                    <ListItemButton
-                        onClick={() => handleSectionToggle(section.id)}
-                        sx={{
-                            minHeight: 48,
-                            justifyContent: open ? 'initial' : 'center',
-                            px: 2.5,
-                        }}
-                    >
-                        {section.icon && (
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                    color: hasActiveItem ? 'primary.main' : 'inherit',
-                                }}
-                            >
-                                {section.icon}
-                            </ListItemIcon>
-                        )}
-                        <ListItemText
-                            primary={
-                                <Typography
-                                    variant="subtitle2"
-                                    color={hasActiveItem ? 'primary' : 'textSecondary'}
-                                    sx={{
-                                        fontWeight: 600,
-                                        textTransform: 'uppercase',
-                                        fontSize: '0.75rem',
-                                        letterSpacing: '0.08em',
-                                    }}
-                                >
-                                    {section.label}
-                                </Typography>
-                            }
-                            sx={{
-                                opacity: open ? 1 : 0,
-                            }}
-                        />
-                        {open && (isOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />)}
-                    </ListItemButton>
-                </ListItem>
-
-                {open && (
-                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            {renderMenuItems(section.items)}
-                        </List>
-                    </Collapse>
-                )}
-
-                {!open && (
-                    <List component="div" disablePadding>
-                        {renderMenuItems(section.items)}
-                    </List>
-                )}
-            </React.Fragment>
-        );
-    };
-
     return (
         <StyledDrawer variant="permanent" open={open}>
             <DrawerHeader>
-                <Box sx={{ flexGrow: 1 }}>
-                    {open && (
-                        <Typography variant="subtitle2" color="textSecondary" sx={{ pl: 2 }}>
-                            {t('sidebar.collapseMenu')}
-                        </Typography>
-                    )}
-                </Box>
                 <IconButton onClick={handleDrawerToggle}>
                     {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </IconButton>
             </DrawerHeader>
             <Divider />
-
-            <List>
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton
-                        component={Link}
-                        to={`/${ROUTES.WORKSPACE}`}
-                        sx={{
-                            minHeight: 48,
-                            justifyContent: open ? 'initial' : 'center',
-                            px: 2.5,
-                            ...(location.pathname === `/${ROUTES.WORKSPACE}` && {
-                                backgroundColor: 'action.selected',
-                                '&:hover': {
-                                    backgroundColor: 'action.selected',
-                                },
-                            }),
-                        }}
-                    >
-                        <ListItemIcon
-                            sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : 'auto',
-                                justifyContent: 'center',
-                                color: location.pathname === `/${ROUTES.WORKSPACE}` ? 'primary.main' : 'inherit',
-                            }}
-                        >
-                            <DashboardIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={t('header.workspace')}
-                            sx={{
-                                opacity: open ? 1 : 0,
-                                color: location.pathname === `/${ROUTES.WORKSPACE}` ? 'primary.main' : 'inherit',
-                            }}
-                        />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-
-            <Divider sx={{ my: 1 }} />
-
-            {/* Render only the two sections we need */}
-            {sidebarSections.map(renderSection)}
-
-            <Divider sx={{ my: 1 }} />
-
-            <List>
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton
-                        sx={{
-                            minHeight: 48,
-                            justifyContent: open ? 'initial' : 'center',
-                            px: 2.5,
-                        }}
-                    >
-                        <ListItemIcon
-                            sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : 'auto',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <SettingsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={t('sidebar.settings')} sx={{ opacity: open ? 1 : 0 }} />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'auto' }}>{children}</Box>
         </StyledDrawer>
     );
 };

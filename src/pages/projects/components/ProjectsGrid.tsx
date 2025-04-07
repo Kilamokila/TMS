@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { Card, CardContent, Typography, Box, IconButton, Skeleton, useTheme, Grid2 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ProjectWithStats } from '../model/project';
+import { ROUTES } from '@router/routes';
+import { useNavigate } from '@tanstack/react-router';
 
 interface ProjectsGridProps {
     projects: ProjectWithStats[];
@@ -13,6 +15,11 @@ interface ProjectsGridProps {
 export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, isLoading, onMenuOpen }) => {
     const theme = useTheme();
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const handleClick = (event: MouseEvent<HTMLDivElement>, project: ProjectWithStats) => {
+        navigate({ to: `/${ROUTES.PROJECT}/$projectId`, params: { projectId: project.id } });
+    };
 
     // Скелетон для загрузки
     if (isLoading) {
@@ -58,6 +65,8 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, isLoading,
             {projects.map((project) => (
                 <Grid2 size={{ xs: 12, md: 4, sm: 6 }} key={project.id}>
                     <Card
+                        component="div"
+                        onClick={(event) => handleClick(event, project)}
                         sx={{
                             borderRadius: 2,
                             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
