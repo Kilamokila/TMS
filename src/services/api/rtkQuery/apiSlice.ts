@@ -32,7 +32,7 @@ export const apiSlice = createApi({
         },
     }),
     // Определение всех типов тегов для кэширования
-    tagTypes: ['Project', 'User', 'Organization', 'TestPlan', 'TestCase', 'TestRun'],
+    tagTypes: ['Project', 'User', 'Organization', 'TestPlan', 'TestCase', 'TestStep', 'TestRun'],
     endpoints: () => ({}),
 });
 

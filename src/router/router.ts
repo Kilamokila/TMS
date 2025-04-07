@@ -5,6 +5,7 @@ import { Projects } from '@pages/projects';
 import { Workspace } from '@pages/workspace';
 import { TestRuns } from '@pages/test-runs';
 import { ProtectedRoute } from '@context/auth/ProtectedRoute';
+import { ProjectRepository } from '@pages/project-repository';
 
 const rootRoute = createRootRoute({
     component: AppLayout,
@@ -20,6 +21,12 @@ const projectsRoute = createRoute({
     getParentRoute: () => protectedRoute,
     path: ROUTES.PROJECTS,
     component: Projects,
+});
+
+const projectRepositoryRoute = createRoute({
+    getParentRoute: () => protectedRoute,
+    path: `${ROUTES.PROJECT}/$projectId`,
+    component: ProjectRepository,
 });
 
 const workspaceRoute = createRoute({
@@ -46,7 +53,7 @@ const indexRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
     indexRoute,
-    protectedRoute.addChildren([projectsRoute, workspaceRoute, testRunsRoute]),
+    protectedRoute.addChildren([projectsRoute, projectRepositoryRoute, workspaceRoute, testRunsRoute]),
 ]);
 
 export const router = createRouter({ routeTree });
