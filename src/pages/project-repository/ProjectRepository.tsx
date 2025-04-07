@@ -262,8 +262,6 @@ export const ProjectRepository: React.FC = () => {
                 (existingStep) => !newSteps.some((newStep) => newStep.id === existingStep.id),
             );
 
-            console.log(stepsToRemove);
-
             for (const stepToRemove of stepsToRemove) {
                 await deleteTestStep({
                     testStepId: stepToRemove.id,
@@ -333,14 +331,15 @@ export const ProjectRepository: React.FC = () => {
         }
     };
 
-    const handleDeleteTestStep = async (testStepId: number, testCaseId: number) => {
-        try {
-            await deleteTestStep({ testStepId, testCaseId }).unwrap();
-        } catch (error) {
-            console.error('Failed to delete test step:', error);
-            showNotification(getErrorMessage(error), 'error');
-        }
-    };
+    // const handleDeleteTestStep = async (testStepId: number, testCaseId: number) => {
+    //     try {
+    //         // console.log({ testStepId, testCaseId });
+    //         await deleteTestStep({ testStepId, testCaseId }).unwrap();
+    //     } catch (error) {
+    //         console.error('Failed to delete test step:', error);
+    //         showNotification(getErrorMessage(error), 'error');
+    //     }
+    // };
 
     // Переход от просмотра к редактированию
     const handleViewToEdit = () => {
@@ -394,7 +393,6 @@ export const ProjectRepository: React.FC = () => {
                 onClose={handleCloseCreateDialog}
                 onSubmit={handleCreateTestCase}
                 isSubmitting={isCreating}
-                onDeleteTestStep={handleDeleteTestStep}
             />
 
             <CreateEditTestCaseDialog
@@ -403,7 +401,6 @@ export const ProjectRepository: React.FC = () => {
                 onClose={handleCloseEditDialog}
                 onSubmit={handleUpdateTestCase}
                 isSubmitting={isUpdating}
-                onDeleteTestStep={handleDeleteTestStep}
             />
 
             <ViewTestCaseDialog

@@ -25,13 +25,11 @@ interface TestCaseFormProps {
     testCase?: TestCaseResponseDto;
     onSubmit: (data: TestCaseFormData) => void;
     isSubmitting: boolean;
-    onDeleteTestStep?: (testStepId: number, testCaseId: number) => Promise<void>;
 }
 
-export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, isSubmitting, onDeleteTestStep }) => {
+export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, isSubmitting }) => {
     const { t } = useTranslation();
 
-    console.log('ТЕСТ КЕЙС', testCase);
     // Инициализация формы с данными тестового сценария (если он передан)
     const defaultValues: TestCaseFormData = testCase
         ? {
@@ -69,7 +67,7 @@ export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, 
     });
 
     // Управление полями массива тестовых шагов
-    const { fields, append, remove, update } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control,
         name: 'testSteps',
     });
@@ -84,11 +82,11 @@ export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, 
     };
 
     // Обновление порядковых номеров при перемещении шагов
-    const updateOrderNumbers = () => {
-        fields.forEach((field, index) => {
-            update(index, { ...field, orderNumber: index + 1 });
-        });
-    };
+    // const updateOrderNumbers = () => {
+    //     fields.forEach((field, index) => {
+    //         update(index, { ...field, orderNumber: index + 1 });
+    //     });
+    // };
 
     // const handleDeleteStep = async (index: number, stepId?: unknown) => {
     //     console.log('handleDeleteStep called with index:', index, 'stepId:', stepId);
@@ -115,19 +113,8 @@ export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, 
     //     console.log('Step removed and order numbers updated');
     // };
 
-    const handleDeleteStep = async (index: number, stepId?: number) => {
-        if (stepId && testCase && onDeleteTestStep) {
-            try {
-                await onDeleteTestStep(stepId, testCase.id);
-            } catch (error) {
-                console.error('Failed to delete test step:', error);
-
-                return;
-            }
-        }
-
+    const handleDeleteStep = async (index: number) => {
         remove(index);
-        updateOrderNumbers();
     };
 
     // Обработка отправки формы
@@ -329,7 +316,7 @@ export const TestCaseForm: React.FC<TestCaseFormProps> = ({ testCase, onSubmit, 
                                 <IconButton
                                     size="small"
                                     color="error"
-                                    onClick={() => handleDeleteStep(index, field.id)}
+                                    onClick={() => handleDeleteStep(index)}
                                     sx={{ ml: 'auto' }}
                                     aria-label={t('common.delete')}
                                     disabled={isSubmitting}

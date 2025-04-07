@@ -22,7 +22,6 @@ interface CreateEditTestCaseDialogProps {
     onClose: () => void;
     onSubmit: (data: TestCaseFormData) => Promise<void | TestCaseResponseDto>;
     isSubmitting: boolean;
-    onDeleteTestStep?: (testStepId: number, testCaseId: number) => Promise<void>;
 }
 
 export const CreateEditTestCaseDialog: React.FC<CreateEditTestCaseDialogProps> = ({
@@ -31,7 +30,6 @@ export const CreateEditTestCaseDialog: React.FC<CreateEditTestCaseDialogProps> =
     onClose,
     onSubmit,
     isSubmitting,
-    onDeleteTestStep,
 }) => {
     const theme = useTheme();
     const { t } = useTranslation();
@@ -77,12 +75,7 @@ export const CreateEditTestCaseDialog: React.FC<CreateEditTestCaseDialogProps> =
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ padding: '24px', paddingTop: '24px' }}>
-                <TestCaseForm
-                    testCase={testCase}
-                    onSubmit={handleSubmit}
-                    isSubmitting={isSubmitting}
-                    onDeleteTestStep={onDeleteTestStep}
-                />
+                <TestCaseForm testCase={testCase} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
             </DialogContent>
             <DialogActions
                 sx={{
