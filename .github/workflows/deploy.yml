@@ -46,5 +46,8 @@ jobs:
           kubectl rollout restart deployment commit-tms-fe -n commit-tms-be
           
       - name: Cleanup
-        run: rm kubeconfig
+        run: |
+          if [ -f kubeconfig ]; then
+          rm kubeconfig
+          fi
         if: always()
