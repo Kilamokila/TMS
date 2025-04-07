@@ -50,7 +50,7 @@
         "projectDeleted": "Project deleted successfully",
         "deleteProject": "Delete project",
         "deleteProjectConfirm": "Are you sure you want to delete this project?",
-        "deleteProjectWarning": "This action cannot be undone. All test cases, runs and data associated with this project will be permanently deleted.",
+        "deleteProjectWarning": "This action cannot be undone. All test cases, runs and data associated with this project will be permanently deleted",
         "noProjectsFound": "No projects found",
         "noIssues": "No issues",
         "noMembers": "No members",
