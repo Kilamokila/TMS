@@ -17,7 +17,7 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, isLoading,
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const handleClick = (event: MouseEvent<HTMLDivElement>, project: ProjectWithStats) => {
+    const handleClick = (_: MouseEvent<HTMLDivElement>, project: ProjectWithStats) => {
         navigate({ to: `/${ROUTES.PROJECT}/$projectId`, params: { projectId: project.id } });
     };
 
