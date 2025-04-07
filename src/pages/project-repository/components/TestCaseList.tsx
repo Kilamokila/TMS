@@ -146,7 +146,7 @@ export const TestCaseList: React.FC<TestCaseListProps> = ({
     }
 
     // Если нет тестовых сценариев
-    if (!isLoading && testCases.length === 0) {
+    if (!isLoading && !testCases.length) {
         return (
             <Box sx={{ textAlign: 'center', py: 5 }}>
                 <Typography variant="body1" color="textSecondary">
