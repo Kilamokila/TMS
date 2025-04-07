@@ -117,25 +117,23 @@ export const ProjectSidebarContent: React.FC<ProjectSidebarContentProps> = ({ pr
                         <ListItem disablePadding>
                             <ListItemButton
                                 component={Link}
-                                to={`/${ROUTES.PROJECTS}/${projectId}`}
+                                to={`/${ROUTES.PROJECT}/${projectId}`}
                                 sx={{
                                     pl: 4,
-                                    bgcolor: isActive(`/${ROUTES.PROJECTS}/${projectId}`)
+                                    bgcolor: isActive(`/${ROUTES.PROJECT}/${projectId}`)
                                         ? 'action.selected'
                                         : 'transparent',
                                 }}
                             >
                                 <ListItemIcon sx={{ minWidth: 36 }}>
                                     <FolderIcon
-                                        color={isActive(`/${ROUTES.PROJECTS}/${projectId}`) ? 'primary' : 'inherit'}
+                                        color={isActive(`/${ROUTES.PROJECT}/${projectId}`) ? 'primary' : 'inherit'}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={t('sidebar.repository')}
                                     sx={{
-                                        color: isActive(`/${ROUTES.PROJECTS}/${projectId}`)
-                                            ? 'primary.main'
-                                            : 'inherit',
+                                        color: isActive(`/${ROUTES.PROJECT}/${projectId}`) ? 'primary.main' : 'inherit',
                                     }}
                                 />
                             </ListItemButton>

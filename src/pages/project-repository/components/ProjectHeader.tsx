@@ -40,9 +40,9 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         {projectCode}
                     </Typography>
                     <Typography variant="h5" component="span" sx={{ mx: 1, color: 'text.secondary' }}>
-                        /
+                        -
                     </Typography>
-                    <Typography variant="h5" component="span" color="primary">
+                    <Typography variant="h5" component="span">
                         {t('testCases.repository')}
                     </Typography>
                 </Box>
