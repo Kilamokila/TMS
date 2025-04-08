@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Alert, Snackbar } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { debounce } from 'lodash-es';
+//import { debounce } from 'lodash-es';
 
 import {
     useGetProjectByIdQuery,
@@ -25,7 +25,7 @@ import { TestCaseFormData, mapFormToTestCaseRequest, mapFormToTestStepRequests }
 import { TestCaseRequestDto, TestCaseResponseDto, TestStepRequestDto } from '@services/api/models';
 import { CreateEditTestCaseDialog } from './components/CreateEditTestCaseDialog';
 
-const debounceTime = 500;
+//const debounceTime = 500;
 const autoHideTime = 3000;
 const userId = 1; // В реальном приложении получаем ID текущего пользователя из системы аутентификации
 
@@ -126,17 +126,18 @@ export const ProjectRepository: React.FC = () => {
         });
     };
 
-    // Обработчик для поиска с debounce
-    const debouncedSearch = useCallback(
-        debounce((value: string) => {
-            setSearchValue(value);
-        }, debounceTime),
-        [],
-    );
+    // TODO: если поиск реализует бэк - сдлеать обработчик для поиска с debounce
+
+    // const debouncedSearch = useCallback(
+    //     debounce((value: string) => {
+    //         setSearchValue(value);
+    //     }, debounceTime),
+    //     [],
+    // );
 
     // Обработчики для тестовых сценариев
     const handleSearchChange = (value: string) => {
-        debouncedSearch(value);
+        setSearchValue(value);
     };
 
     const handleSelectTestCase = (id: number, selected: boolean) => {
