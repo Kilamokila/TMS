@@ -6,6 +6,7 @@ import { Workspace } from '@pages/workspace';
 import { TestRuns } from '@pages/test-runs';
 import { ProtectedRoute } from '@context/auth/ProtectedRoute';
 import { ProjectRepository } from '@pages/project-repository';
+import { TestPlanDetails, TestPlans } from '@pages/test-plans';
 
 const rootRoute = createRootRoute({
     component: AppLayout,
@@ -35,6 +36,24 @@ const workspaceRoute = createRoute({
     component: Workspace,
 });
 
+const testPlansRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: ROUTES.TEST_PLANS,
+    component: TestPlans,
+    // Добавляем поддержку query-параметра projectId
+    validateSearch: (search: Record<string, unknown>) => {
+        return {
+            projectId: search.projectId ? String(search.projectId) : undefined,
+        };
+    },
+});
+
+const testPlanDetailsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: `${ROUTES.TEST_PLANS}/$testPlanId`,
+    component: TestPlanDetails,
+});
+
 const testRunsRoute = createRoute({
     getParentRoute: () => protectedRoute,
     path: ROUTES.TEST_RUNS,
@@ -53,7 +72,14 @@ const indexRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
     indexRoute,
-    protectedRoute.addChildren([projectsRoute, projectRepositoryRoute, workspaceRoute, testRunsRoute]),
+    protectedRoute.addChildren([
+        projectsRoute,
+        projectRepositoryRoute,
+        workspaceRoute,
+        testRunsRoute,
+        testPlansRoute,
+        testPlanDetailsRoute,
+    ]),
 ]);
 
 export const router = createRouter({ routeTree });

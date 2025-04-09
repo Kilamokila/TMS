@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useGetProjectByIdQuery } from '@services/api/rtkQuery';
@@ -174,6 +175,39 @@ export const ProjectSidebarContent: React.FC<ProjectSidebarContentProps> = ({ pr
 
                 <Collapse in={openSections.execution} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
+                        {/* Тестовые планы - новый пункт меню */}
+                        <ListItem disablePadding>
+                            <ListItemButton
+                                component={Link}
+                                to={`/${ROUTES.TEST_PLANS}?projectId=${projectId}`}
+                                sx={{
+                                    pl: 4,
+                                    bgcolor: isActive(`/${ROUTES.TEST_PLANS}?projectId=${projectId}`)
+                                        ? 'action.selected'
+                                        : 'transparent',
+                                }}
+                            >
+                                <ListItemIcon sx={{ minWidth: 36 }}>
+                                    <AssignmentIcon
+                                        color={
+                                            isActive(`/${ROUTES.TEST_PLANS}?projectId=${projectId}`)
+                                                ? 'primary'
+                                                : 'inherit'
+                                        }
+                                    />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={t('sidebar.testPlans')}
+                                    sx={{
+                                        color: isActive(`/${ROUTES.TEST_PLANS}?projectId=${projectId}`)
+                                            ? 'primary.main'
+                                            : 'inherit',
+                                    }}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+
+                        {/* Тестовые прогоны */}
                         <ListItem disablePadding>
                             <ListItemButton
                                 component={Link}
