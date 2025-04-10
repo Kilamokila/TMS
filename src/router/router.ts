@@ -36,27 +36,24 @@ const workspaceRoute = createRoute({
     component: Workspace,
 });
 
+// Изменяем на path-параметр вместо query-параметра
 const testPlansRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: ROUTES.TEST_PLANS,
+    getParentRoute: () => protectedRoute,
+    path: `${ROUTES.TEST_PLANS}/$projectId`,
     component: TestPlans,
-    // Добавляем поддержку query-параметра projectId
-    validateSearch: (search: Record<string, unknown>) => {
-        return {
-            projectId: search.projectId ? String(search.projectId) : undefined,
-        };
-    },
 });
 
+// Обновляем путь, добавляя projectId для согласованности
 const testPlanDetailsRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: `${ROUTES.TEST_PLANS}/$testPlanId`,
+    getParentRoute: () => protectedRoute,
+    path: `${ROUTES.TEST_PLANS}/$projectId/$testPlanId`,
     component: TestPlanDetails,
 });
 
+// Изменяем на path-параметр вместо query-параметра
 const testRunsRoute = createRoute({
     getParentRoute: () => protectedRoute,
-    path: ROUTES.TEST_RUNS,
+    path: `${ROUTES.TEST_RUNS}/$projectId`,
     component: TestRuns,
 });
 

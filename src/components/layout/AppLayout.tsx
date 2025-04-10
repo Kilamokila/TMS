@@ -21,11 +21,11 @@ export const AppLayout: React.FC = () => {
     const showSidebar = ROUTES_WITH_SIDEBAR.includes(currentPath);
 
     const renderSidebarContent = () => {
-        if (currentPath === ROUTES.PROJECT || (ROUTES.TEST_PLANS && projectId)) {
+        if (currentPath === ROUTES.PROJECT || currentPath === ROUTES.TEST_PLANS || currentPath === ROUTES.TEST_RUNS) {
             return <ProjectSidebarContent projectId={projectId} />;
         }
-
         //TODO: Для других путей
+
         return null;
     };
 

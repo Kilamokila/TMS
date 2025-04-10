@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Alert, Snackbar } from '@mui/material';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -27,7 +27,7 @@ const userId = 1; // В реальном приложении получаем I
 export const TestPlans: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { projectId } = useSearch({ from: '/' + ROUTES.TEST_PLANS });
+    const { projectId } = useParams({ strict: false });
     const numericProjectId = projectId ? parseInt(projectId, 10) : undefined;
 
     // Состояние для поиска
@@ -155,9 +155,8 @@ export const TestPlans: React.FC = () => {
         if (!numericProjectId) return;
 
         navigate({
-            to: `/${ROUTES.TEST_PLANS}/$testPlanId`,
+            to: `/${ROUTES.TEST_PLANS}/${projectId}/$testPlanId`,
             params: { testPlanId: String(id) },
-            search: { projectId: String(numericProjectId) },
         });
     };
 
@@ -184,11 +183,8 @@ export const TestPlans: React.FC = () => {
 
         // Перенаправление на страницу создания тестового прогона с предварительно выбранным планом
         navigate({
-            to: `/${ROUTES.TEST_RUNS}`,
-            search: {
-                projectId: String(numericProjectId),
-                testPlanId: String(testPlanId),
-            },
+            to: `/${ROUTES.TEST_RUNS}/${numericProjectId}`,
+            search: { testPlanId: String(testPlanId) },
         });
     };
 

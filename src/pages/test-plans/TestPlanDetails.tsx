@@ -16,7 +16,7 @@ import {
     CircularProgress,
     SelectChangeEvent,
 } from '@mui/material';
-import { useParams, Link as RouterLink, useNavigate, useSearch } from '@tanstack/react-router';
+import { useParams, Link as RouterLink, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,8 +55,7 @@ const userId = 1; // В реальном приложении получаем I
 
 export const TestPlanDetails: React.FC = () => {
     const { t } = useTranslation();
-    const { testPlanId } = useParams({ strict: false });
-    const { projectId } = useSearch({ from: '/' + ROUTES.TEST_PLANS + '/$testPlanId' });
+    const { testPlanId, projectId } = useParams({ strict: false });
     const navigate = useNavigate();
     const { language } = useLanguageContext();
 
@@ -313,10 +312,7 @@ export const TestPlanDetails: React.FC = () => {
             showNotification(t('testPlans.notifications.deleted'), 'success');
 
             // Переход на страницу списка планов
-            navigate({
-                to: `/${ROUTES.TEST_PLANS}`,
-                search: { projectId },
-            });
+            navigate({ to: `/${ROUTES.TEST_PLANS}/${projectId}` });
         } catch (error) {
             console.error('Failed to delete test plan:', error);
             showNotification(getErrorMessage(error), 'error');
@@ -360,7 +356,7 @@ export const TestPlanDetails: React.FC = () => {
             {/* Хлебные крошки и заголовок */}
             <Box sx={{ mb: 3 }}>
                 <Breadcrumbs sx={{ mb: 2 }}>
-                    <Link component={RouterLink} to={`/${ROUTES.PROJECTS}`} color="inherit">
+                    <Link component={RouterLink} to={`/${ROUTES.TEST_PLANS}/${projectId}`} color="inherit">
                         {t('projects.title')}
                     </Link>
                     {project && (
