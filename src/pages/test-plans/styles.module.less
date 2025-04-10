@@ -1,0 +1,102 @@
+.container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.planStatus {
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.statusDraft {
+    background-color: #fff9c4;
+    color: #fbc02d;
+}
+
+.statusActive {
+    background-color: #c8e6c9;
+    color: #4caf50;
+}
+
+.statusCompleted {
+    background-color: #bbdefb;
+    color: #2196f3;
+}
+
+.testCasesList {
+    margin-top: 24px;
+}
+
+.testCaseItem {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: rgb(0 0 0 / 4%);
+    }
+}
+
+.testCaseOrder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 16px;
+    font-weight: bold;
+}
+
+.dragHandle {
+    cursor: move;
+    margin-right: 8px;
+}
+
+.noItemsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    margin-top: 24px;
+}
+
+.noItemsIcon {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 16px;
+}
+
+.dialogContent {
+    min-height: 300px;
+}

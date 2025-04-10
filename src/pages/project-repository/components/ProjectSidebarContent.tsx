@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useGetProjectByIdQuery } from '@services/api/rtkQuery';
@@ -50,7 +51,7 @@ export const ProjectSidebarContent: React.FC<ProjectSidebarContentProps> = ({ pr
         }));
     };
 
-    // Проверка активного пути
+    // Улучшенная проверка активного пути
     const isActive = (path: string) => location.pathname === path;
 
     // Если проект загружается или произошла ошибка
@@ -174,30 +175,55 @@ export const ProjectSidebarContent: React.FC<ProjectSidebarContentProps> = ({ pr
 
                 <Collapse in={openSections.execution} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
+                        {/* Тестовые планы - обновленная ссылка с path-параметрами */}
                         <ListItem disablePadding>
                             <ListItemButton
                                 component={Link}
-                                to={`/${ROUTES.TEST_RUNS}?projectId=${projectId}`}
+                                to={`/${ROUTES.TEST_PLANS}/${projectId}`}
                                 sx={{
                                     pl: 4,
-                                    bgcolor: isActive(`/${ROUTES.TEST_RUNS}?projectId=${projectId}`)
+                                    bgcolor: isActive(`/${ROUTES.TEST_PLANS}/${projectId}`)
+                                        ? 'action.selected'
+                                        : 'transparent',
+                                }}
+                            >
+                                <ListItemIcon sx={{ minWidth: 36 }}>
+                                    <AssignmentIcon
+                                        color={isActive(`/${ROUTES.TEST_PLANS}/${projectId}`) ? 'primary' : 'inherit'}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={t('sidebar.testPlans')}
+                                    sx={{
+                                        color: isActive(`/${ROUTES.TEST_PLANS}/${projectId}`)
+                                            ? 'primary.main'
+                                            : 'inherit',
+                                    }}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+
+                        {/* Тестовые прогоны - обновленная ссылка с path-параметрами */}
+                        <ListItem disablePadding>
+                            <ListItemButton
+                                component={Link}
+                                to={`/${ROUTES.TEST_RUNS}/${projectId}`}
+                                sx={{
+                                    pl: 4,
+                                    bgcolor: isActive(`/${ROUTES.TEST_RUNS}/${projectId}`)
                                         ? 'action.selected'
                                         : 'transparent',
                                 }}
                             >
                                 <ListItemIcon sx={{ minWidth: 36 }}>
                                     <PlayArrowIcon
-                                        color={
-                                            isActive(`/${ROUTES.TEST_RUNS}?projectId=${projectId}`)
-                                                ? 'primary'
-                                                : 'inherit'
-                                        }
+                                        color={isActive(`/${ROUTES.TEST_RUNS}/${projectId}`) ? 'primary' : 'inherit'}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={t('sidebar.testRuns')}
                                     sx={{
-                                        color: isActive(`/${ROUTES.TEST_RUNS}?projectId=${projectId}`)
+                                        color: isActive(`/${ROUTES.TEST_RUNS}/${projectId}`)
                                             ? 'primary.main'
                                             : 'inherit',
                                     }}
