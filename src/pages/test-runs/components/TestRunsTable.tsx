@@ -16,15 +16,18 @@ import {
     MenuItem,
     ListItemIcon,
     ListItemText,
+    Dialog,
 } from '@mui/material';
 import { TestRun, TestRunStatus } from '../model/testRun';
 import { useTranslation } from 'react-i18next';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { TestRunStatsBar } from './TestRunStatsBar';
 import { EditTestRunModal } from './EditTestRunModal';
 import { DeleteTestRunModal } from './DeleteTestRunModal';
+import { TestRunDetails } from './TestRunDetails';
 
 interface TestRunsTableProps {
     testRuns: TestRun[];
@@ -46,6 +49,7 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({
     // Состояния для модальных окон
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [selectedTestRun, setSelectedTestRun] = useState<TestRun | null>(null);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +92,11 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({
     const handleDelete = () => {
         handleMenuClose();
         setIsDeleteModalOpen(true);
+    };
+
+    const handleViewDetails = () => {
+        handleMenuClose();
+        setIsDetailsModalOpen(true);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -189,86 +198,96 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {testRuns.map((run) => {
-                            const isItemSelected = isSelected(run.id);
+                        {testRuns.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={9} align="center" sx={{ py: 3 }}>
+                                    <Typography variant="body1" color="textSecondary">
+                                        {t('testRuns.noTestRunsFound')}
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            testRuns.map((run) => {
+                                const isItemSelected = isSelected(run.id);
 
-                            return (
-                                <TableRow
-                                    key={run.id}
-                                    hover
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    selected={isItemSelected}
-                                >
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                            checked={isItemSelected}
-                                            onClick={() => handleSelect(run.id)}
-                                            inputProps={{ 'aria-labelledby': `test-run-${run.id}` }}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2" fontWeight={500}>
-                                            {run.title}
-                                        </Typography>
-                                        <Typography variant="caption" color="textSecondary">
-                                            {getTimeSinceStarted(run.startedAt)}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>{getStatusChip(run.status)}</TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Box
-                                                sx={{
-                                                    width: 24,
-                                                    height: 24,
-                                                    bgcolor: 'primary.main',
-                                                    color: 'primary.contrastText',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderRadius: '4px',
-                                                    fontWeight: 500,
-                                                    fontSize: '0.75rem',
-                                                }}
-                                            >
-                                                {run.author.avatar || run.author.name.charAt(0)}
-                                            </Box>
-                                            <Typography variant="body2">{run.author.name}</Typography>
-                                        </Box>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2">{run.environment}</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2">{formatTime(run.totalTime)}</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2">{formatTime(run.elapsedTime)}</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                                            <Box sx={{ flexGrow: 1, mr: 1 }}>
-                                                <TestRunStatsBar stats={run.stats} />
-                                            </Box>
+                                return (
+                                    <TableRow
+                                        key={run.id}
+                                        hover
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        selected={isItemSelected}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                checked={isItemSelected}
+                                                onClick={() => handleSelect(run.id)}
+                                                inputProps={{ 'aria-labelledby': `test-run-${run.id}` }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
                                             <Typography variant="body2" fontWeight={500}>
-                                                {run.stats.total}
+                                                {run.title}
                                             </Typography>
-                                        </Box>
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <IconButton
-                                            size="small"
-                                            onClick={(event) => handleMenuOpen(event, run)}
-                                            aria-label={t('testRuns.menu.tooltip')}
-                                        >
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
+                                            <Typography variant="caption" color="textSecondary">
+                                                {getTimeSinceStarted(run.startedAt)}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>{getStatusChip(run.status as TestRunStatus)}</TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Box
+                                                    sx={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        bgcolor: 'primary.main',
+                                                        color: 'primary.contrastText',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '4px',
+                                                        fontWeight: 500,
+                                                        fontSize: '0.75rem',
+                                                    }}
+                                                >
+                                                    {run.author.avatar || run.author.name.charAt(0)}
+                                                </Box>
+                                                <Typography variant="body2">{run.author.name}</Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body2">{run.environment}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body2">{formatTime(run.totalTime)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body2">{formatTime(run.elapsedTime)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                                <Box sx={{ flexGrow: 1, mr: 1 }}>
+                                                    <TestRunStatsBar stats={run.stats} />
+                                                </Box>
+                                                <Typography variant="body2" fontWeight={500}>
+                                                    {run.stats.total}
+                                                </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <IconButton
+                                                size="small"
+                                                onClick={(event) => handleMenuOpen(event, run)}
+                                                aria-label={t('testRuns.menu.tooltip')}
+                                            >
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -287,6 +306,12 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({
                     horizontal: 'right',
                 }}
             >
+                <MenuItem onClick={handleViewDetails}>
+                    <ListItemIcon>
+                        <VisibilityIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{t('common.view')}</ListItemText>
+                </MenuItem>
                 <MenuItem onClick={handleEdit}>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
@@ -300,6 +325,16 @@ export const TestRunsTable: React.FC<TestRunsTableProps> = ({
                     <ListItemText sx={{ color: 'error.main' }}>{t('common.delete')}</ListItemText>
                 </MenuItem>
             </Menu>
+
+            {/* Модальное окно для просмотра деталей */}
+            {selectedTestRun && (
+                <Dialog open={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)} maxWidth="lg" fullWidth>
+                    <TestRunDetails
+                        testRunId={parseInt(selectedTestRun.id)}
+                        onBack={() => setIsDetailsModalOpen(false)}
+                    />
+                </Dialog>
+            )}
 
             {/* Модальное окно для редактирования */}
             {selectedTestRun && (
