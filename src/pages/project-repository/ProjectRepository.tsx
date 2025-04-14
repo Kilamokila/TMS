@@ -26,7 +26,7 @@ import { TestCaseRequestDto, TestCaseResponseDto, TestStepRequestDto } from '@se
 import { CreateEditTestCaseDialog } from './components/CreateEditTestCaseDialog';
 
 //const debounceTime = 500;
-const autoHideTime = 3000;
+const AUTO_HIDE_TIME = 3000;
 const userId = 1; // В реальном приложении получаем ID текущего пользователя из системы аутентификации
 
 export const ProjectRepository: React.FC = () => {
@@ -423,7 +423,7 @@ export const ProjectRepository: React.FC = () => {
             {/* Уведомления */}
             <Snackbar
                 open={notification.open}
-                autoHideDuration={autoHideTime}
+                autoHideDuration={AUTO_HIDE_TIME}
                 onClose={() => setNotification({ ...notification, open: false })}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >

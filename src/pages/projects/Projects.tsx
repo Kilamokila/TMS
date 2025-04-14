@@ -21,7 +21,7 @@ import {
 
 const debounceTime = 700;
 
-const autoHideTime = 3000;
+const AUTO_HIDE_TIME = 3000;
 
 export const Projects: React.FC = () => {
     const { t } = useTranslation();
@@ -309,7 +309,7 @@ export const Projects: React.FC = () => {
             {/* Уведомления */}
             <Snackbar
                 open={notification.open}
-                autoHideDuration={autoHideTime}
+                autoHideDuration={AUTO_HIDE_TIME}
                 onClose={() => setNotification({ ...notification, open: false })}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >

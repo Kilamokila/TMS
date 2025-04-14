@@ -50,7 +50,7 @@ import { ROUTES } from '@router/routes';
 import { AddTestCasesDialog } from './components/AddTestCaseDialog';
 import { ReorderTestCasesDialog } from './components/ReorderTestCaseDialog';
 
-const autoHideTime = 3000;
+const AUTO_HIDE_TIME = 3000;
 const userId = 1; // В реальном приложении получаем ID текущего пользователя из системы аутентификации
 
 export const TestPlanDetails: React.FC = () => {
@@ -500,7 +500,7 @@ export const TestPlanDetails: React.FC = () => {
             {/* Уведомления */}
             <Snackbar
                 open={notification.open}
-                autoHideDuration={autoHideTime}
+                autoHideDuration={AUTO_HIDE_TIME}
                 onClose={() => setNotification({ ...notification, open: false })}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >

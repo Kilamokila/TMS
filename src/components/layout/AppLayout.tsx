@@ -4,7 +4,7 @@ import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import styles from './styles.module.less';
 import { Header } from '../header';
 import { Sidebar } from '../sidebar';
-import { ROUTES, ROUTES_WITH_SIDEBAR } from '@router/routes';
+import { ROUTES_WITH_SIDEBAR } from '@router/routes';
 import { ProjectSidebarContent } from '@pages/project-repository/components/ProjectSidebarContent';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -21,7 +21,7 @@ export const AppLayout: React.FC = () => {
     const showSidebar = ROUTES_WITH_SIDEBAR.includes(currentPath);
 
     const renderSidebarContent = () => {
-        if (currentPath === ROUTES.PROJECT || currentPath === ROUTES.TEST_PLANS || currentPath === ROUTES.TEST_RUNS) {
+        if (showSidebar) {
             return <ProjectSidebarContent projectId={projectId} />;
         }
         //TODO: Для других путей

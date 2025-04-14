@@ -21,7 +21,7 @@ import { TestPlanFormData, mapFormToRequest } from './schema';
 import { TestPlanResponseDto, mapTestPlanToUI } from '@services/api/models/testPlans';
 import { ROUTES } from '@router/routes';
 
-const autoHideTime = 3000;
+const AUTO_HIDE_TIME = 3000;
 const userId = 1; // В реальном приложении получаем ID текущего пользователя из системы аутентификации
 
 export const TestPlans: React.FC = () => {
@@ -38,7 +38,7 @@ export const TestPlans: React.FC = () => {
     const [selectedTestPlans, setSelectedTestPlans] = useState<number[]>([]);
 
     // Состояние для активного тестового плана (для просмотра, редактирования, удаления)
-    const [activeTestPlan, setActiveTestPlan] = useState<TestPlanResponseDto | undefined>(undefined);
+    const [activeTestPlan, setActiveTestPlan] = useState<TestPlanResponseDto>();
 
     // Состояния для модальных окон
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -332,7 +332,7 @@ export const TestPlans: React.FC = () => {
             {/* Уведомления */}
             <Snackbar
                 open={notification.open}
-                autoHideDuration={autoHideTime}
+                autoHideDuration={AUTO_HIDE_TIME}
                 onClose={() => setNotification({ ...notification, open: false })}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
