@@ -4,23 +4,28 @@ import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import styles from './styles.module.less';
 import { Header } from '../header';
 import { Sidebar } from '../sidebar';
-import { ROUTES, ROUTES_WITH_SIDEBAR } from '@router/routes';
+import { ROUTES_WITH_SIDEBAR } from '@router/routes';
 import { ProjectSidebarContent } from '@pages/project-repository/components/ProjectSidebarContent';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export const AppLayout: React.FC = () => {
     const location = useLocation();
     const { projectId } = useParams({ strict: false });
 
-    const currentPath = location.pathname.substring(1).split('/')[0] as 'project' | 'workspace' | 'test-runs';
+    const currentPath = location.pathname.substring(1).split('/')[0] as
+        | 'project'
+        | 'workspace'
+        | 'test-runs'
+        | 'test-plans';
 
     const showSidebar = ROUTES_WITH_SIDEBAR.includes(currentPath);
 
     const renderSidebarContent = () => {
-        if (currentPath === ROUTES.PROJECT && projectId) {
+        if (showSidebar) {
             return <ProjectSidebarContent projectId={projectId} />;
         }
-
         //TODO: Для других путей
+
         return null;
     };
 
@@ -34,9 +39,11 @@ export const AppLayout: React.FC = () => {
                     <Sidebar>{renderSidebarContent()}</Sidebar>
                 </Box>
             )}
-            <Box className={styles.main} component="main">
-                <Outlet />
-            </Box>
+            <ErrorBoundary fallback={<div>Что-то пошло не так</div>}>
+                <Box className={styles.main} component="main">
+                    <Outlet />
+                </Box>
+            </ErrorBoundary>
         </Box>
     );
 };

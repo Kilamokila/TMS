@@ -227,5 +227,71 @@
             "updated": "Test run updated successfully",
             "deleted": "Test run deleted successfully"
         }
+    },
+    "testPlans": {
+        "title": "Test Plans",
+        "createTestPlan": "Create Test Plan",
+        "editTestPlan": "Edit Test Plan",
+        "deleteTestPlan": "Delete Test Plan",
+        "searchTestPlans": "Search for test plans",
+        "selectedCount": "{{count}} selected",
+        "noTestPlansFound": "No test plans found",
+        "deleteConfirmation": "Are you sure you want to delete this test plan?",
+        "deleteWarning": "This action cannot be undone. All data associated with this test plan will be permanently deleted.",
+        "emptyState": {
+            "title": "No Test Plans Yet",
+            "description": "Create your first test plan to start organizing your test execution. Test plans help you group related test cases for specific testing activities."
+        },
+        "columns": {
+            "name": "NAME",
+            "status": "STATUS",
+            "testCases": "TEST CASES",
+            "lastUpdated": "LAST UPDATED",
+            "actions": "ACTIONS"
+        },
+        "status": {
+            "draft": "Draft",
+            "active": "Active",
+            "completed": "Completed"
+        },
+        "form": {
+            "name": "Name",
+            "description": "Description",
+            "status": "Status",
+            "nameRequired": "Test plan name is required",
+            "nameHolder": "For example: Sprint 1 Regression",
+            "descriptionHolder": "Enter test plan description",
+            "testCases": "Test Cases"
+        },
+        "details": {
+            "backToList": "Back to test plans",
+            "testCasesInPlan": "Test Cases in Plan",
+            "addTestCases": "Add Test Cases",
+            "reorder": "Reorder Test Cases",
+            "noTestCases": "No test cases in this plan",
+            "addYourFirst": "Add your first test case to this plan"
+        },
+        "addTestCases": {
+            "title": "Add Test Cases to Plan",
+            "search": "Search for test cases",
+            "available": "Available Test Cases",
+            "selected": "Selected Test Cases",
+            "add": "Add Selected",
+            "noTestCasesFound": "No test cases found",
+            "noTestCasesSelected": "No test cases selected"
+        },
+        "reorderTestCases": {
+            "title": "Reorder Test Cases",
+            "info": "Drag and drop test cases to change their order",
+            "save": "Save Order"
+        },
+        "notifications": {
+            "created": "Test plan created successfully",
+            "updated": "Test plan updated successfully",
+            "deleted": "Test plan deleted successfully",
+            "testCasesAdded": "Test cases added to plan successfully",
+            "testCasesReordered": "Test cases reordered successfully",
+            "testCaseRemoved": "Test case removed from plan successfully"
+        }
     }
 }
