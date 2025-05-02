@@ -1,17 +1,14 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { ApiError } from '../models';
-import { LocalStorageUtil } from '@services/storage';
-import { EStorageKeys } from '@services/storage/storageKeys';
 import { API_URL } from '@constants/environment';
+import { getKeycloakToken } from '@context/auth/KeycloakProvider';
 
-// Базовый API клиент
 export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
         prepareHeaders: (headers) => {
-            // Здесь можно добавить авторизацию и другие общие заголовки
-            const token = LocalStorageUtil.getItem<string>(EStorageKeys.TOKEN);
+            const token = getKeycloakToken();
 
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);

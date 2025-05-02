@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Keycloak from 'keycloak-js';
 import { KeycloakContext } from './KeycloakContext';
-import { KEYCLOAK_CONFIG } from '@constants/environment';
+import { API_URL, KEYCLOAK_CONFIG } from '@constants/environment';
 import { TKeycloakToken } from './types/types';
 
 const initOptions: Keycloak.KeycloakConfig = {
@@ -12,26 +12,34 @@ const initOptions: Keycloak.KeycloakConfig = {
 
 const keycloak = new Keycloak(initOptions);
 
+export const tokenManager = (() => {
+    let accessToken: TKeycloakToken = null;
+
+    return {
+        getAccessToken: () => accessToken,
+        setAccessToken: (token: TKeycloakToken) => {
+            accessToken = token;
+        },
+    };
+})();
+
+export const getKeycloakToken = () => tokenManager.getAccessToken();
+export const setKeycloakToken = (token: TKeycloakToken) => tokenManager.setAccessToken(token);
+
 export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const tokenManager = (() => {
-        let accessToken: TKeycloakToken = null;
-
-        return {
-            getAccessToken: () => accessToken,
-            setAccessToken: (token: TKeycloakToken) => {
-                accessToken = token;
-            },
-        };
-    })();
-
     const [initialized, setInitialized] = useState<boolean>(false);
 
     useEffect(() => {
         keycloak
-            .init({ checkLoginIframe: false })
+            .init({
+                checkLoginIframe: false,
+                pkceMethod: 'S256',
+                onLoad: 'login-required',
+                redirectUri: `${API_URL}/projects`,
+            })
             .then((authenticated) => {
                 if (authenticated) {
-                    tokenManager.setAccessToken(keycloak.token);
+                    setKeycloakToken(keycloak.token);
                     setInitialized(true);
                 }
             })
@@ -52,7 +60,7 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
         return keycloak
             .updateToken(30)
             .then(() => {
-                tokenManager.setAccessToken(keycloak.token);
+                setKeycloakToken(keycloak.token);
             })
             .catch((error) => {
                 console.error('Failed to update token', error);
@@ -61,17 +69,15 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
 
     const logout = () => {
         keycloak.logout();
-        tokenManager.setAccessToken(null);
+        setKeycloakToken(null);
         setInitialized(false);
     };
 
-    const isAuthenticated = () => !!tokenManager.getAccessToken();
+    const isAuthenticated = () => !!getKeycloakToken();
 
     const providerValue = {
         initialized,
         keycloak,
-        getAccessToken: tokenManager.getAccessToken,
-        setAccessToken: tokenManager.setAccessToken,
         updateToken,
         logout,
         isAuthenticated,
