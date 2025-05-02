@@ -1,22 +1,22 @@
-import React from 'react';
-//import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from '@tanstack/react-router';
-//import { useKeycloak } from './useKeycloak';
+import { useKeycloak } from './useKeycloak';
+import { getKeycloakToken } from './KeycloakProvider';
 
 export const ProtectedRoute: React.FC = () => {
-    // const { initialized, keycloak } = useKeycloak();
+    const { initialized, updateToken, keycloak } = useKeycloak();
 
-    // useEffect(() => {
-    //     if (initialized) {
-    //         if (!keycloak?.authenticated) {
-    //             keycloak?.login();
-    //         }
-    //     }
-    // }, [initialized, keycloak]);
+    useEffect(() => {
+        if (initialized && !getKeycloakToken()) {
+            updateToken().catch(() => {
+                keycloak?.login();
+            });
+        }
+    }, [initialized, updateToken, keycloak]);
 
-    // if (!initialized || !keycloak?.authenticated) {
-    //     return <div>Загрузка...</div>;
-    // }
+    if (!initialized || !getKeycloakToken()) {
+        return <div>Загрузка...</div>;
+    }
 
     return <Outlet />;
 };

@@ -1,11 +1,8 @@
-import Keycloak from 'keycloak-js';
 import React, { useEffect, useState } from 'react';
-import { KeycloakContext as KeycloakAuthContext } from './KeycloakContext';
-
-import { LocalStorageUtil } from '@services/storage';
-import { EStorageKeys } from '@services/storage/storageKeys';
-import { IKeycloakContextProps } from './types/KeycloakContextPropsInterface';
-import { KEYCLOAK_CONFIG } from '@constants/environment';
+import Keycloak from 'keycloak-js';
+import { KeycloakContext } from './KeycloakContext';
+import { API_URL, KEYCLOAK_CONFIG } from '@constants/environment';
+import { TKeycloakToken } from './types/types';
 
 const initOptions: Keycloak.KeycloakConfig = {
     url: KEYCLOAK_CONFIG.URL,
@@ -13,72 +10,78 @@ const initOptions: Keycloak.KeycloakConfig = {
     clientId: KEYCLOAK_CONFIG.CLIENT_ID,
 };
 
-type TKeycloakProvider = React.FC<React.PropsWithChildren>;
+const keycloak = new Keycloak(initOptions);
 
-/**
- * Функция для создания keycloak провайдера.
- * @param KeycloakContext Контекст keycloak.
- */
-const createKeycloakProvider = (KeycloakContext: React.Context<IKeycloakContextProps>): TKeycloakProvider => {
-    const keycloak = new Keycloak(initOptions);
+export const tokenManager = (() => {
+    let accessToken: TKeycloakToken = null;
 
-    const KeycloakProvider: TKeycloakProvider = ({ children }) => {
-        const [initialized, setInitialized] = useState<boolean>(false);
+    return {
+        getAccessToken: () => accessToken,
+        setAccessToken: (token: TKeycloakToken) => {
+            accessToken = token;
+        },
+    };
+})();
 
-        useEffect(() => {
-            const initialize = () => {
-                keycloak
-                    .init({
-                        checkLoginIframe: false,
-                    })
-                    .then(() => {
-                        setInitialized(true);
+export const getKeycloakToken = () => tokenManager.getAccessToken();
+export const setKeycloakToken = (token: TKeycloakToken) => tokenManager.setAccessToken(token);
 
-                        if (keycloak.token) {
-                            LocalStorageUtil.setItem(EStorageKeys.TOKEN, keycloak.token);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Failed to initialize Keycloak', error);
-                        throw new Error(error);
-                    });
-            };
+export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const [initialized, setInitialized] = useState<boolean>(false);
 
-            initialize();
-        }, []);
+    useEffect(() => {
+        keycloak
+            .init({
+                checkLoginIframe: false,
+                pkceMethod: 'S256',
+                onLoad: 'login-required',
+                redirectUri: `${API_URL}/projects`,
+            })
+            .then((authenticated) => {
+                if (authenticated) {
+                    setKeycloakToken(keycloak.token);
+                    setInitialized(true);
+                }
+            })
+            .catch((error) => {
+                console.error('Failed to initialize Keycloak', error);
+            });
 
         keycloak.onTokenExpired = () => {
-            keycloak
-                .updateToken(320)
-                .then((refreshed) => {
-                    if (refreshed && keycloak.token) {
-                        LocalStorageUtil.setItem(EStorageKeys.TOKEN, keycloak.token);
-                    }
-                })
-                .catch(() => {
-                    console.error('Failed to refresh token ' + new Date());
-                });
+            updateToken();
         };
 
-        keycloak.onAuthRefreshError = () => {
-            keycloak.login();
+        return () => {
+            keycloak.onTokenExpired = undefined;
         };
+    }, []);
 
-        keycloak.onAuthLogout = () => {
-            LocalStorageUtil.removeItem(EStorageKeys.TOKEN);
-        };
-
-        const providerValue = React.useMemo(() => {
-            return {
-                initialized,
-                keycloak,
-            };
-        }, [keycloak, initialized]);
-
-        return <KeycloakContext.Provider value={providerValue}>{children}</KeycloakContext.Provider>;
+    const updateToken = () => {
+        return keycloak
+            .updateToken(30)
+            .then(() => {
+                setKeycloakToken(keycloak.token);
+            })
+            .catch((error) => {
+                console.error('Failed to update token', error);
+            });
     };
 
-    return KeycloakProvider;
-};
+    const logout = () => {
+        keycloak.logout();
+        setKeycloakToken(null);
+        setInitialized(false);
+    };
 
-export const KeycloakProvider = createKeycloakProvider(KeycloakAuthContext);
+    const isAuthenticated = () => !!getKeycloakToken();
+
+    const providerValue = {
+        initialized,
+        keycloak,
+        updateToken,
+        logout,
+        isAuthenticated,
+    };
+
+    return <KeycloakContext.Provider value={providerValue}>{children}</KeycloakContext.Provider>;
+};
