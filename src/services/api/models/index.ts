@@ -3,3 +3,8 @@ export * from './projects';
 export * from './testCase';
 export * from './testPlans';
 export * from './testRun';
+export * from './users';
+export * from './organizations';
+export * from './userOrganizations';
+export * from './projectUsers';
+export * from './testSuites';

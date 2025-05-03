@@ -2,3 +2,8 @@ export * from './projectsApi';
 export * from './testCasesApi';
 export * from './testPlansApi';
 export * from './testRunsApi';
+export * from './usersApi';
+export * from './organizationsApi';
+export * from './userOrganizationsApi';
+export * from './projectUsersApi';
+export * from './testSuitesApi';

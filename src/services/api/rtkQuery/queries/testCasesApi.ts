@@ -89,6 +89,40 @@ export const testCasesApi = apiSlice.injectEndpoints({
             },
         ),
 
+        // Обновление статуса тест-кейса
+        updateTestCaseStatus: builder.mutation<
+            TestCaseResponseDto,
+            { testCaseId: number; status: 'DRAFT' | 'ACTIVE' | 'DEPRECATED' }
+        >({
+            query: ({ testCaseId, status }) => ({
+                url: `test-cases/${testCaseId}/status`,
+                method: 'PATCH',
+                body: status,
+            }),
+            invalidatesTags: (result, _error, { testCaseId }) =>
+                [
+                    { type: 'TestCase' as const, id: testCaseId },
+                    result ? { type: 'TestCase' as const, id: `PROJECT_${result.projectId}` } : null,
+                ].filter(Boolean),
+        }),
+
+        // Обновление приоритета тест-кейса
+        updateTestCasePriority: builder.mutation<
+            TestCaseResponseDto,
+            { testCaseId: number; priority: 'LOW' | 'MEDIUM' | 'HIGH' }
+        >({
+            query: ({ testCaseId, priority }) => ({
+                url: `test-cases/${testCaseId}/priority`,
+                method: 'PATCH',
+                body: priority,
+            }),
+            invalidatesTags: (result, _error, { testCaseId }) =>
+                [
+                    { type: 'TestCase' as const, id: testCaseId },
+                    result ? { type: 'TestCase' as const, id: `PROJECT_${result.projectId}` } : null,
+                ].filter(Boolean),
+        }),
+
         // Удаление тестового сценария
         deleteTestCase: builder.mutation<void, number>({
             query: (testCaseId) => ({
@@ -161,6 +195,8 @@ export const {
     useGetTestCaseByIdQuery,
     useCreateTestCaseMutation,
     useUpdateTestCaseMutation,
+    useUpdateTestCaseStatusMutation,
+    useUpdateTestCasePriorityMutation,
     useDeleteTestCaseMutation,
     useCreateTestStepMutation,
     useUpdateTestStepMutation,
