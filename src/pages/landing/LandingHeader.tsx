@@ -1,24 +1,20 @@
-import { Link } from '@tanstack/react-router';
-import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import TranslateIcon from '@mui/icons-material/Translate';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { Button } from '@components/common/ui-kit/Button';
 import styles from './styles.module.less';
-import { ROUTES } from '@router/routes';
-import { useThemeContext } from '@context/theme';
-
+import { CommitLogoSVG } from '@assets/svg';
 import { useTranslation } from 'react-i18next';
 import { useLanguageContext } from '@context/language/languageContext';
 import { LANGUAGE, TLanguage } from '@context/language/types/languageModes';
-import { useKeycloak } from '@context/auth';
+import TranslateIcon from '@mui/icons-material/Translate';
 
-export const Header: React.FC = () => {
-    const { mode, toggleTheme } = useThemeContext();
+interface LandingHeaderProps {
+    onLogin: () => void;
+}
+
+export const LandingHeader: React.FC<LandingHeaderProps> = ({ onLogin }) => {
     const { language, changeLanguage } = useLanguageContext();
     const { t } = useTranslation();
-    const { logout } = useKeycloak();
     const [langMenuAnchorEl, setLangMenuAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,10 +30,6 @@ export const Header: React.FC = () => {
         handleLangMenuClose();
     };
 
-    const handleLogout = () => {
-        logout();
-    };
-
     return (
         <AppBar
             position="static"
@@ -49,22 +41,9 @@ export const Header: React.FC = () => {
         >
             <Toolbar className={styles.toolbar}>
                 <Box component="div" className={styles.logo}>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="8" fill="#2C2E3B" />
-                        <text x="50%" y="50%" textAnchor="middle" dy=".3em" fill="white" fontSize="12">
-                            TMS
-                        </text>
-                    </svg>
+                    <CommitLogoSVG />
                 </Box>
-                <nav className={styles.navLinks}>
-                    <Link to={`/${ROUTES.PROJECTS}`} className={styles.navLink}>
-                        {t('header.projects')}
-                    </Link>
-                    <Link to={`/${ROUTES.WORKSPACE}`} className={styles.navLink}>
-                        {t('header.workspace')}
-                    </Link>
-                </nav>
-                <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+                <Box sx={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
                     <IconButton
                         onClick={handleLangMenuOpen}
                         color="inherit"
@@ -81,17 +60,9 @@ export const Header: React.FC = () => {
                             Русский
                         </MenuItem>
                     </Menu>
-                    <IconButton
-                        onClick={toggleTheme}
-                        color="inherit"
-                        aria-label={t('header.toggleTheme')}
-                        title={t('header.toggleTheme')}
-                    >
-                        {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-                    </IconButton>
-                    <IconButton onClick={handleLogout} color="inherit">
-                        <LogoutIcon />
-                    </IconButton>
+                    <Button variant="contained" color="primary" onClick={onLogin}>
+                        {t('common.login')}
+                    </Button>
                 </Box>
             </Toolbar>
         </AppBar>

@@ -15,11 +15,21 @@
         "add": "Add",
         "remove": "Remove",
         "saving": "Saving...",
-        "deleting": "Deleting..."
+        "deleting": "Deleting...",
+        "back": "Back",
+        "update": "Update",
+        "updating": "Updating...",
+        "processing": "Processing...",
+        "view": "View",
+        "login": "Login"
     },
     "languages": {
         "en": "English",
         "ru": "Russian"
+    },
+    "landing": {
+        "title": "Test Management System for QA",
+        "description": "Here is a comprehensive platform designed to streamline and enhance the quality assurance process, developing by Comm-IT."
     },
     "header": {
         "projects": "Projects",
@@ -226,7 +236,22 @@
             "created": "Test run created successfully",
             "updated": "Test run updated successfully",
             "deleted": "Test run deleted successfully"
-        }
+        },
+        "statistics": "Statistics",
+        "totalTests": "total tests",
+        "completeRun": "Complete run",
+        "testCase": "Test case",
+        "testResults": "Test results",
+        "notes": "Notes",
+        "addNotes": "Add notes",
+        "executedAt": "Executed",
+        "actions": "Actions",
+        "noResults": "No test results",
+        "notFound": "Test run not found",
+        "createdBy": "Created by",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "noTestRunsFound": "No test runs found"
     },
     "testPlans": {
         "title": "Test Plans",

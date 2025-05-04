@@ -1,0 +1,1 @@
+export { LoadingSplash } from './LoadingSplash';

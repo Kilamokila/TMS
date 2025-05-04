@@ -1,4 +1,5 @@
 export const ROUTES = {
+    LANDING: 'landing',
     PROJECTS: 'projects',
     PROJECT: 'project',
     WORKSPACE: 'workspace',

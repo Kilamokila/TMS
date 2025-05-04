@@ -1,22 +1,21 @@
 import React, { useEffect } from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useNavigate } from '@tanstack/react-router';
 import { useKeycloak } from './useKeycloak';
-import { getKeycloakToken } from './KeycloakProvider';
+import { LoadingSplash } from '@components/common/loader';
 
 export const ProtectedRoute: React.FC = () => {
-    const { initialized, updateToken, keycloak } = useKeycloak();
+    const { initialized, isAuthenticated } = useKeycloak();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (initialized && !getKeycloakToken()) {
-            updateToken().catch(() => {
-                keycloak?.login();
-            });
+        if (initialized && !isAuthenticated()) {
+            navigate({ to: '/' });
         }
-    }, [initialized, updateToken, keycloak]);
+    }, [initialized, isAuthenticated]);
 
-    if (!initialized || !getKeycloakToken()) {
-        return <div>Загрузка...</div>;
+    if (!initialized || !isAuthenticated()) {
+        return <LoadingSplash />;
+    } else {
+        return <Outlet />;
     }
-
-    return <Outlet />;
 };

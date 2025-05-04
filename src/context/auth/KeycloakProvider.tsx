@@ -34,13 +34,14 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
             .init({
                 checkLoginIframe: false,
                 pkceMethod: 'S256',
-                onLoad: 'login-required',
+                onLoad: 'check-sso',
                 redirectUri: `${API_URL}/projects`,
             })
             .then((authenticated) => {
+                setInitialized(true);
+
                 if (authenticated) {
                     setKeycloakToken(keycloak.token);
-                    setInitialized(true);
                 }
             })
             .catch((error) => {
