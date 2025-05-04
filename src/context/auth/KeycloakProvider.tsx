@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Keycloak from 'keycloak-js';
 import { KeycloakContext } from './KeycloakContext';
-import { API_URL, KEYCLOAK_CONFIG } from '@constants/environment';
+import { CLIENT_URL, KEYCLOAK_CONFIG } from '@constants/environment';
 import { TKeycloakToken } from './types/types';
 
 const initOptions: Keycloak.KeycloakConfig = {
@@ -35,7 +35,7 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
                 checkLoginIframe: false,
                 pkceMethod: 'S256',
                 onLoad: 'check-sso',
-                redirectUri: `${API_URL}/projects`,
+                redirectUri: `${CLIENT_URL}/projects`,
             })
             .then((authenticated) => {
                 setInitialized(true);
