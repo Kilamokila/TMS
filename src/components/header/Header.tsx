@@ -52,7 +52,7 @@ export const Header: React.FC = () => {
                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="40" height="40" rx="8" fill="#2C2E3B" />
                         <text x="50%" y="50%" textAnchor="middle" dy=".3em" fill="white" fontSize="12">
-                            TMS
+                            TMStest
                         </text>
                     </svg>
                 </Box>
