@@ -30,6 +30,7 @@ jobs:
           VITE_KEYCLOAK_REALM: ${{ secrets.VITE_KEYCLOAK_REALM }}
           VITE_KEYCLOAK_CLIENT_ID: ${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_CLIENT_URL: ${{ secrets.VITE_CLIENT_URL }}
         run: npm run build # Предполагается, что у вас есть скрипт "build" в package.json
 
       - name: Set up Docker Buildx
@@ -53,6 +54,7 @@ jobs:
             VITE_KEYCLOAK_REALM=${{ secrets.VITE_KEYCLOAK_REALM }}
             VITE_KEYCLOAK_CLIENT_ID=${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
             VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_CLIENT_URL=${{ secrets.VITE_CLIENT_URL }}
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
