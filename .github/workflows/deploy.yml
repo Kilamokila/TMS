@@ -2,7 +2,7 @@ name: Build and Deploy Frontend
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
     paths:
       - '**'
       - '!README.md'
@@ -14,6 +14,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Укажите вашу версию Node.js
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci # Используем npm ci для более надёжной установки в CI
+
+      - name: Build Vite project
+        env:
+          VITE_KEYCLOAK_URL: ${{ secrets.VITE_KEYCLOAK_URL }}
+          VITE_KEYCLOAK_REALM: ${{ secrets.VITE_KEYCLOAK_REALM }}
+          VITE_KEYCLOAK_CLIENT_ID: ${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: npm run build # Предполагается, что у вас есть скрипт "build" в package.json
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -31,6 +48,11 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: ershovone/commit-tms-fe:latest
+          build-args: |
+            VITE_KEYCLOAK_URL=${{ secrets.VITE_KEYCLOAK_URL }}
+            VITE_KEYCLOAK_REALM=${{ secrets.VITE_KEYCLOAK_REALM }}
+            VITE_KEYCLOAK_CLIENT_ID=${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
@@ -39,12 +61,12 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
           chmod 600 kubeconfig
-          
+
       - name: Deploy to Kubernetes
         run: |
           export KUBECONFIG="${GITHUB_WORKSPACE}/kubeconfig"
           kubectl rollout restart deployment commit-tms-fe -n commit-tms-be
-          
+
       - name: Cleanup
         run: rm kubeconfig
         if: always()
