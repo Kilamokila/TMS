@@ -33,7 +33,7 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
         keycloak
             .init({
                 checkLoginIframe: false,
-                pkceMethod: 'S256',
+                // pkceMethod: 'S256',
                 onLoad: 'check-sso',
                 redirectUri: `${CLIENT_URL}/projects`,
             })
