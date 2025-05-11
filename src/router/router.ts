@@ -9,17 +9,14 @@ import { ProjectRepository } from '@pages/project-repository';
 import { TestPlanDetails, TestPlans } from '@pages/test-plans';
 import { LandingPage } from '@pages/landing';
 
-// Root route doesn't specify a component, it will just be an outlet
 const rootRoute = createRootRoute();
 
-// Public landing route
 const landingRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/',
     component: LandingPage,
 });
 
-// Protected routes container
 const appLayoutRoute = createRoute({
     getParentRoute: () => rootRoute,
     id: 'app-layout',

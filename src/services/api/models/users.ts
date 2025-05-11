@@ -1,4 +1,3 @@
-// src/services/api/models/users.ts
 import { Page } from './common';
 
 // Модели запросов

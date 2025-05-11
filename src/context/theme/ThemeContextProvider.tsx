@@ -1,12 +1,11 @@
-import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material';
-import { useMemo, useState } from 'react';
 import { CssBaseline } from '@mui/material';
-
+import { useMemo, useState } from 'react';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { EStorageKeys } from '@services/storage/storageKeys';
-import { getThemeConfig } from './themeConfig';
 import { THEME, TMode } from './types/themeModes';
 import { ThemeContext } from './themeContext';
 import { LocalStorageUtil } from '@services/storage';
+import { createAppTheme } from './createAppTheme';
 
 export const ThemeContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [mode, setMode] = useState<TMode>(() => LocalStorageUtil.getItem(EStorageKeys.THEME_MODE) ?? THEME.LIGHT);
@@ -21,7 +20,7 @@ export const ThemeContextProvider: React.FC<React.PropsWithChildren> = ({ childr
         });
     };
 
-    const theme = createTheme(getThemeConfig(mode));
+    const theme = useMemo(() => createAppTheme(mode), [mode]);
 
     const contextValue = useMemo(() => ({ mode, toggleTheme }), [mode]);
 

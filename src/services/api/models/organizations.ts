@@ -1,13 +1,11 @@
 import { Page } from './common';
 import { ProjectResponseDto } from './projects';
 
-// Модели запросов
 export interface OrganizationRequestDto {
     name: string;
     description?: string;
 }
 
-// Модели ответов
 export interface UserOrganizationDto {
     userId: number;
     organizationId: number;
