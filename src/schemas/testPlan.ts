@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { titleSchema, descriptionSchema, testPlanStatusSchema, idSchema } from './common';
-import { TestPlanRequestDto } from '@services/api/models/testPlans';
+import { TestPlanRequestDto, TestPlanStatus } from '@services/api/models/testPlans';
 
 // Схема для формы тестового плана
 export const testPlanSchema = z.object({
@@ -12,12 +12,18 @@ export const testPlanSchema = z.object({
 
 export type TestPlanFormData = z.infer<typeof testPlanSchema>;
 
+const statusMap: Record<TestPlanFormData['status'], TestPlanStatus> = {
+    DRAFT: TestPlanStatus.DRAFT,
+    ACTIVE: TestPlanStatus.ACTIVE,
+    COMPLETED: TestPlanStatus.COMPLETED,
+};
+
 // Преобразование данных формы в запрос API
 export const mapFormToTestPlanRequest = (formData: TestPlanFormData): TestPlanRequestDto => {
     return {
         name: formData.name,
         description: formData.description || undefined,
-        status: formData.status,
+        status: statusMap[formData.status],
         createdBy: formData.createdBy,
     };
 };

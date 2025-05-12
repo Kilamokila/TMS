@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 export interface FormDialogProps extends Omit<DialogProps, 'title'> {
     title: ReactNode;
     children: ReactNode;
-    onClose: () => void;
+    onFormClose: () => void;
     onSubmit?: () => void;
     onCancel?: () => void;
     cancelButtonText?: string;
@@ -32,7 +32,7 @@ export interface FormDialogProps extends Omit<DialogProps, 'title'> {
 export function FormDialog({
     title,
     children,
-    onClose,
+    onFormClose,
     onSubmit,
     onCancel,
     cancelButtonText,
@@ -47,24 +47,21 @@ export function FormDialog({
     const theme = useTheme();
     const { t } = useTranslation();
 
-    // Используем onClose в качестве onCancel, если onCancel не предоставлен
-    const handleCancel = onCancel || onClose;
+    const handleCancel = onCancel || onFormClose;
 
     return (
         <Dialog
             {...dialogProps}
             onClose={(event, reason) => {
-                // Не закрывать диалог при клике за его пределами, если идет отправка
                 if (isSubmitting && reason === 'backdropClick') {
                     return;
                 }
 
-                // Стандартное поведение закрытия
                 if (dialogProps.onClose) {
                     dialogProps.onClose(event, reason);
                 }
 
-                onClose();
+                onFormClose();
             }}
             PaperProps={{
                 ...dialogProps.PaperProps,
@@ -85,7 +82,6 @@ export function FormDialog({
                 }}
             >
                 {typeof title === 'string' ? <Typography variant="inherit">{title}</Typography> : title}
-
                 <IconButton
                     edge="end"
                     color="inherit"
@@ -96,9 +92,7 @@ export function FormDialog({
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-
             <DialogContent sx={{ padding: '24px', paddingTop: '24px' }}>{children}</DialogContent>
-
             <DialogActions
                 sx={{
                     padding: '16px 24px',
@@ -108,14 +102,12 @@ export function FormDialog({
                 }}
             >
                 {footerContent && <div>{footerContent}</div>}
-
                 <div style={{ display: 'flex', gap: '8px' }}>
                     {showCancelButton && (
                         <Button onClick={handleCancel} color="inherit" disabled={isSubmitting}>
                             {cancelButtonText || t('common.cancel')}
                         </Button>
                     )}
-
                     {showSubmitButton && (
                         <Button
                             variant="contained"
