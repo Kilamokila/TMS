@@ -20,6 +20,7 @@ export interface TestCaseRequestDto {
     testCaseStatus: 'DRAFT' | 'ACTIVE' | 'DEPRECATED';
     createdBy: number;
     updatedBy: number;
+    testSuiteId?: number;
 }
 
 export interface TestCaseResponseDto {

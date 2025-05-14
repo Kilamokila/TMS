@@ -30,6 +30,7 @@ export const testCaseSchema = z.object({
     testCasePriority: testCasePrioritySchema,
     testCaseStatus: testCaseStatusSchema,
     testSteps: z.array(testStepSchema).default([]),
+    testSuiteId: idSchema.optional(),
 });
 
 export type TestCaseFormData = z.infer<typeof testCaseSchema>;
@@ -45,6 +46,7 @@ export const mapFormToTestCaseRequest = (formData: TestCaseFormData, userId: num
         testCaseStatus: formData.testCaseStatus,
         createdBy: userId,
         updatedBy: userId,
+        testSuiteId: formData.testSuiteId || undefined,
     };
 };
 

@@ -36,6 +36,7 @@ export const testCaseSchema = z.object({
         invalid_type_error: 'validation.invalidType',
     }),
     testSteps: z.array(testStepSchema).default([]),
+    testSuiteId: z.number().optional(),
 });
 
 // Типы данных из схем
@@ -53,6 +54,7 @@ export const mapFormToTestCaseRequest = (formData: TestCaseFormData, userId: num
         testCaseStatus: formData.testCaseStatus,
         createdBy: userId,
         updatedBy: userId,
+        testSuiteId: formData.testSuiteId || undefined,
     };
 };
 
