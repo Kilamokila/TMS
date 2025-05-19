@@ -11,15 +11,15 @@ import { KeycloakProvider } from '@context/auth/KeycloakProvider';
 export const App: React.FC = () => {
     return (
         <StrictMode>
-            <KeycloakProvider>
-                <Provider store={store}>
+            <Provider store={store}>
+                <KeycloakProvider>
                     <LanguageContextProvider>
                         <ThemeContextProvider>
                             <RouterProvider router={router} />
                         </ThemeContextProvider>
                     </LanguageContextProvider>
-                </Provider>
-            </KeycloakProvider>
+                </KeycloakProvider>
+            </Provider>
         </StrictMode>
     );
 };

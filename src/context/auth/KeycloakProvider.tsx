@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Keycloak from 'keycloak-js';
-import { KeycloakContext } from './KeycloakContext';
+import { useDispatch } from 'react-redux';
+
 import { CLIENT_URL, KEYCLOAK_CONFIG } from '@constants/environment';
-import { TKeycloakToken } from './types/types';
+import { clearRoles, setRoles } from '@store/reducers/roles/actions';
+
+import { KeycloakContext } from './KeycloakContext';
+import { IAuthUser, TKeycloakToken } from './types/types';
 
 const initOptions: Keycloak.KeycloakConfig = {
     url: KEYCLOAK_CONFIG.URL,
@@ -28,6 +32,7 @@ export const setKeycloakToken = (token: TKeycloakToken) => tokenManager.setAcces
 
 export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [initialized, setInitialized] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         keycloak
@@ -42,6 +47,14 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
 
                 if (authenticated) {
                     setKeycloakToken(keycloak.token);
+
+                    keycloak.loadUserInfo().then((authData) => {
+                        const { resource_access } = authData as IAuthUser;
+
+                        if (resource_access?.TMS?.roles) {
+                            dispatch(setRoles(resource_access.TMS.roles));
+                        }
+                    });
                 }
             })
             .catch((error) => {
@@ -54,6 +67,7 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
 
         return () => {
             keycloak.onTokenExpired = undefined;
+            dispatch(clearRoles());
         };
     }, []);
 
