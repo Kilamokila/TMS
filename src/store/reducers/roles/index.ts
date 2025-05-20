@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 
 import { UserRole } from '@context/auth/types/types';
-import { clearRolesState, setRoles } from './actions';
+import { clearRoles, setRoles } from './actions';
 
 export const ROLES_REDUCER_NAME = 'roles';
 
@@ -19,5 +19,5 @@ export const reducer = createReducer(initialState, (builder) => {
             ...state,
             roles: action.payload,
         }))
-        .addCase(clearRolesState, () => initialState);
+        .addCase(clearRoles, () => initialState);
 });
