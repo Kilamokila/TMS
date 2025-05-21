@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router';
-import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem, useTheme, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -13,13 +13,17 @@ import { useTranslation } from 'react-i18next';
 import { useLanguageContext } from '@context/language/languageContext';
 import { LANGUAGE, TLanguage } from '@context/language/types/languageModes';
 import { useKeycloak } from '@context/auth';
+import { TMSLogoDarkSVG, TMSLogoLightSVG } from '@assets/svg';
+import shadows from '@mui/material/styles/shadows';
 
 export const Header: React.FC = () => {
     const { mode, toggleTheme } = useThemeContext();
+    const theme = useTheme();
     const { language, changeLanguage } = useLanguageContext();
     const { t } = useTranslation();
     const { logout } = useKeycloak();
     const [langMenuAnchorEl, setLangMenuAnchorEl] = useState<null | HTMLElement>(null);
+    const navigate = useNavigate();
 
     const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setLangMenuAnchorEl(event.currentTarget);
@@ -34,6 +38,10 @@ export const Header: React.FC = () => {
         handleLangMenuClose();
     };
 
+    const handleNavigateToProjects = () => {
+        navigate({ to: `/${ROUTES.PROJECTS}` });
+    };
+
     const handleLogout = () => {
         logout();
     };
@@ -42,27 +50,22 @@ export const Header: React.FC = () => {
         <AppBar
             position="static"
             sx={{
-                bgcolor: 'background.default',
-                color: 'text.primary',
-                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                bgcolor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                boxShadow: shadows[2],
             }}
         >
             <Toolbar className={styles.toolbar}>
-                <Box component="div" className={styles.logo}>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="8" fill="#2C2E3B" />
-                        <text x="50%" y="50%" textAnchor="middle" dy=".3em" fill="white" fontSize="12">
-                            TMS
-                        </text>
-                    </svg>
+                <Box onClick={handleNavigateToProjects} component="div" className={styles.logo}>
+                    {mode === 'dark' ? <TMSLogoDarkSVG /> : <TMSLogoLightSVG />}
                 </Box>
                 <nav className={styles.navLinks}>
-                    <Link to={`/${ROUTES.PROJECTS}`} className={styles.navLink}>
-                        {t('header.projects')}
-                    </Link>
-                    <Link to={`/${ROUTES.WORKSPACE}`} className={styles.navLink}>
-                        {t('header.workspace')}
-                    </Link>
+                    <Typography variant="inherit" sx={{ color: theme.palette.text.primary }}>
+                        <Link to={`/${ROUTES.PROJECTS}`}>{t('header.projects')}</Link>
+                    </Typography>
+                    <Typography variant="inherit" sx={{ color: theme.palette.text.primary }}>
+                        <Link to={`/${ROUTES.WORKSPACE}`}>{t('header.workspace')}</Link>
+                    </Typography>
                 </nav>
                 <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                     <IconButton

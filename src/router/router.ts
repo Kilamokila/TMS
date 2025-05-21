@@ -4,17 +4,34 @@ import { AppLayout } from '@components/layout';
 import { Projects } from '@pages/projects';
 import { Workspace } from '@pages/workspace';
 import { TestRuns } from '@pages/test-runs';
-import { ProtectedRoute } from '@context/auth/ProtectedRoute';
 import { ProjectRepository } from '@pages/project-repository';
 import { TestPlanDetails, TestPlans } from '@pages/test-plans';
 import { LandingPage } from '@pages/landing';
+import { CreateOrganization } from '@pages/create-organization';
+import { ProtectedRoute } from '@context/auth';
+import { PublicRoute } from '@context/auth';
+import { PageNotFound } from '@components/errors';
 
-const rootRoute = createRootRoute();
+const rootRoute = createRootRoute({
+    notFoundComponent: PageNotFound,
+});
+
+const publicLayoutRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    component: PublicRoute,
+    path: '/',
+});
 
 const landingRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/',
+    getParentRoute: () => publicLayoutRoute,
+    path: ROUTES.LANDING,
     component: LandingPage,
+});
+
+const createOrganizationRoute = createRoute({
+    getParentRoute: () => publicLayoutRoute,
+    path: ROUTES.CREATE_ORGANIZATION,
+    component: CreateOrganization,
 });
 
 const appLayoutRoute = createRoute({
@@ -66,7 +83,7 @@ const testRunsRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([
-    landingRoute,
+    publicLayoutRoute.addChildren([landingRoute, createOrganizationRoute]),
     appLayoutRoute.addChildren([
         protectedRoute.addChildren([
             projectsRoute,

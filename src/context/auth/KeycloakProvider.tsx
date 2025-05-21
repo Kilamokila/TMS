@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Keycloak from 'keycloak-js';
 import { KeycloakContext } from './KeycloakContext';
 import { CLIENT_URL, KEYCLOAK_CONFIG } from '@constants/environment';
-import { TKeycloakToken } from './types/types';
+import { TKeycloakToken, IKeycloakContextProps } from './types/types';
+import { ROUTES } from '@router/routes';
+import { LoadingSplash } from '@components/common/loader';
 
 const initOptions: Keycloak.KeycloakConfig = {
     url: KEYCLOAK_CONFIG.URL,
@@ -10,7 +12,11 @@ const initOptions: Keycloak.KeycloakConfig = {
     clientId: KEYCLOAK_CONFIG.CLIENT_ID,
 };
 
-const keycloak = new Keycloak(initOptions);
+export const keycloakInstance = new Keycloak(initOptions);
+
+let keycloakInitPromise: Promise<boolean> | null = null;
+
+export const getKeycloakInitPromise = () => keycloakInitPromise;
 
 export const tokenManager = (() => {
     let accessToken: TKeycloakToken = null;
@@ -28,40 +34,46 @@ export const setKeycloakToken = (token: TKeycloakToken) => tokenManager.setAcces
 
 export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [initialized, setInitialized] = useState<boolean>(false);
+    const providerValueRef = useRef<IKeycloakContextProps | null>(null);
 
     useEffect(() => {
-        keycloak
+        keycloakInitPromise = keycloakInstance
             .init({
                 checkLoginIframe: false,
                 pkceMethod: 'S256',
                 onLoad: 'check-sso',
-                redirectUri: `${CLIENT_URL}/projects`,
+                redirectUri: `${CLIENT_URL}/${ROUTES.PROJECTS}`,
             })
             .then((authenticated) => {
                 setInitialized(true);
 
                 if (authenticated) {
-                    setKeycloakToken(keycloak.token);
+                    setKeycloakToken(keycloakInstance.token);
                 }
+
+                return authenticated;
             })
             .catch((error) => {
                 console.error('Failed to initialize Keycloak', error);
+                setInitialized(true);
+
+                return false;
             });
 
-        keycloak.onTokenExpired = () => {
+        keycloakInstance.onTokenExpired = () => {
             updateToken();
         };
 
         return () => {
-            keycloak.onTokenExpired = undefined;
+            keycloakInstance.onTokenExpired = undefined;
         };
     }, []);
 
     const updateToken = () => {
-        return keycloak
+        return keycloakInstance
             .updateToken(30)
             .then(() => {
-                setKeycloakToken(keycloak.token);
+                setKeycloakToken(keycloakInstance.token);
             })
             .catch((error) => {
                 console.error('Failed to update token', error);
@@ -69,20 +81,31 @@ export const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }
     };
 
     const logout = () => {
-        keycloak.logout();
+        keycloakInstance.logout();
         setKeycloakToken(null);
         setInitialized(false);
+        keycloakInitPromise = null;
     };
 
-    const isAuthenticated = () => !!getKeycloakToken();
+    const isAuthenticated = () => !!keycloakInstance.token && !!keycloakInstance.authenticated;
 
-    const providerValue = {
-        initialized,
-        keycloak,
-        updateToken,
-        logout,
-        isAuthenticated,
-    };
+    if (
+        !providerValueRef.current ||
+        providerValueRef.current.initialized !== initialized ||
+        providerValueRef.current.keycloak !== keycloakInstance
+    ) {
+        providerValueRef.current = {
+            initialized,
+            keycloak: keycloakInstance,
+            updateToken,
+            logout,
+            isAuthenticated,
+        };
+    }
 
-    return <KeycloakContext.Provider value={providerValue}>{children}</KeycloakContext.Provider>;
+    if (!initialized) {
+        return <LoadingSplash />;
+    }
+
+    return <KeycloakContext.Provider value={providerValueRef.current!}>{children}</KeycloakContext.Provider>;
 };

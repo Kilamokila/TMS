@@ -3,3 +3,4 @@ export * from './project';
 export * from './testCase';
 export * from './testPlan';
 export * from './testRun';
+export * from './organizations';

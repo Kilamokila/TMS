@@ -1,327 +1,176 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Box, TablePagination, Menu, MenuItem, Snackbar, Alert } from '@mui/material';
+import React, { useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { debounce } from 'lodash-es';
-
-import { ProjectWithStats, mapProjectToUI, ProjectResponseDto } from '@services/api/models';
-
-import { ProjectsToolbar } from './components/ProjectsToolbar';
-import { ProjectsTable } from './components/ProjectsTable';
-import { ProjectsGrid } from './components/ProjectsGrid';
-import { EditProjectDialog } from './components/EditProjectDialog';
-import { DeleteProjectDialog } from './components/DeleteProjectDialog';
-import { ProjectFormData, mapFormToRequest } from './schema';
-import {
-    useCreateProjectMutation,
-    useGetProjectsQuery,
-    useUpdateProjectMutation,
-    useDeleteProjectMutation,
-    getErrorMessage,
-} from '@services/api/rtkQuery';
-
-const debounceTime = 700;
-
-const AUTO_HIDE_TIME = 3000;
+import { Box, Button, Typography, Container, Grid2 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useGetProjectsQuery } from '@services/api/rtkQuery/queries/projectsApi';
+import { ProjectResponseDto } from '@services/api/models/projects';
+import { LoadingSplash } from '@components/common/loader';
+import { useProjectParams } from './hooks/useProjectParams';
+import { TViewMode, useProjectsView, VIEW_MODE } from './hooks/useProjectsView';
+import { useDialog } from '@hooks/useDialog';
+import { Pagination, SearchInput, ViewToggleButtons } from './components/items';
+import { ProjectEmptyState, ProjectGrid, ProjectTable } from './components/lists';
+import { CreateProjectDialog, DeleteProjectConfirmation, EditProjectDialog } from './components/dialogs';
 
 export const Projects: React.FC = () => {
     const { t } = useTranslation();
-    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
-    const [searchValue, setSearchValue] = useState('');
-    const [sortField, setSortField] = useState<string>('name');
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    const { viewMode, setTableView, setGridView } = useProjectsView();
+    const { params, searchTerm, setSearchTerm, clearSearch, sortState, updateSort, setPage, setPageSize } =
+        useProjectParams();
 
-    // Состояния для модальных окон
-    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [selectedProject, setSelectedProject] = useState<ProjectResponseDto | undefined>(undefined);
+    // Данные для модальных окон
+    const [selectedProject, setSelectedProject] = useState<ProjectResponseDto | null>(null);
 
-    // Состояние для меню
-    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+    // Хуки для управления модальными окнами
+    const createDialog = useDialog();
+    const editDialog = useDialog();
+    const deleteDialog = useDialog();
 
-    const [, setSelectedProjectId] = useState<number | null>(null);
+    // Запрос на получение проектов
+    const { data, isLoading } = useGetProjectsQuery(params);
+    const projects = useMemo(() => data?.content || [], [data]);
+    const isLoadingProjects = isLoading;
 
-    // Состояние для уведомлений
-    const [notification, setNotification] = useState<{
-        open: boolean;
-        message: string;
-        severity: 'success' | 'error' | 'info' | 'warning';
-    }>({
-        open: false,
-        message: '',
-        severity: 'success',
-    });
-
-    // RTK Query хук для получения проектов
-    const {
-        data: projectsPage,
-        isLoading,
-        error: fetchError,
-        refetch,
-    } = useGetProjectsQuery({
-        page,
-        size: pageSize,
-        sort: [`${sortField},${sortDirection}`],
-        name: searchValue,
-    });
-
-    const [createProject, { isLoading: isCreating, error: createError }] = useCreateProjectMutation();
-    const [updateProject, { isLoading: isUpdating, error: updateError }] = useUpdateProjectMutation();
-    const [deleteProject, { isLoading: isDeleting, error: deleteError }] = useDeleteProjectMutation();
-
-    // Обработка ошибок RTK Query
-    useEffect(() => {
-        if (fetchError) {
-            showNotification(getErrorMessage(fetchError), 'error');
-        }
-    }, [fetchError]);
-
-    // Мапим проекты для UI
-    const projects: ProjectWithStats[] = projectsPage?.content.map(mapProjectToUI) || [];
-
-    // Показать уведомление
-    const showNotification = (message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
-        setNotification({
-            open: true,
-            message,
-            severity,
-        });
-    };
-
-    // Обработчики для пагинации
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPageSize(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const debouncedSearch = useCallback(
-        debounce(() => {
-            setPage(0); // Сбрасываем на первую страницу при изменении поиска
-            refetch(); // Перезапрашиваем данные с новыми параметрами
-        }, debounceTime),
-        [refetch],
-    );
-
-    // Обработчик для поиска
-    const handleSearchChange = (value: string) => {
-        setSearchValue(value);
-        debouncedSearch();
-    };
-
-    // Обработчик сортировки
-    const handleSort = (field: string, direction: 'asc' | 'desc') => {
-        setSortField(field);
-        setSortDirection(direction);
-    };
+    // Временно используем 1 в качестве organizationId для создания проекта
+    const organizationId = 1;
 
     // Обработчики для модальных окон
-    const handleOpenCreateDialog = () => {
-        setSelectedProject(undefined);
-        setIsCreateDialogOpen(true);
-    };
+    const handleCreateProjectClick = useCallback(() => {
+        createDialog.openDialog({
+            type: 'create',
+            title: t('projects.createNewProject'),
+        });
+    }, [createDialog, t]);
 
-    const handleOpenEditDialog = () => {
-        setIsEditDialogOpen(true);
-    };
-
-    const handleOpenDeleteDialog = () => {
-        setIsDeleteDialogOpen(true);
-    };
-
-    // Обработчики для меню
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, projectId: number) => {
-        setMenuAnchorEl(event.currentTarget);
-        setSelectedProjectId(projectId);
-
-        // Находим проект по ID
-        const project = projects.find((p) => p.id === projectId);
-
-        if (project) {
+    const handleEditProjectClick = useCallback(
+        (project: ProjectResponseDto) => {
             setSelectedProject(project);
-        }
-    };
+            editDialog.openDialog({
+                type: 'edit',
+                title: t('projects.editProject'),
+            });
+        },
+        [editDialog, t],
+    );
 
-    const handleMenuClose = () => {
-        setMenuAnchorEl(null);
-    };
+    const handleDeleteProjectClick = useCallback(
+        (project: ProjectResponseDto) => {
+            setSelectedProject(project);
+            deleteDialog.openDialog({
+                type: 'delete',
+                title: t('projects.deleteProject'),
+            });
+        },
+        [deleteDialog, t],
+    );
 
-    // Обработчики для CRUD операций
-    const handleCreateProject = async (data: ProjectFormData) => {
-        try {
-            const requestData = mapFormToRequest(data);
+    // Обработчик изменения режима просмотра
+    const handleViewModeChange = useCallback(
+        (mode: TViewMode) => {
+            if (mode === VIEW_MODE.TABLE) {
+                setTableView();
+            } else {
+                setGridView();
+            }
+        },
+        [setTableView, setGridView],
+    );
 
-            await createProject(requestData).unwrap();
-            setIsCreateDialogOpen(false);
-            showNotification(t('projects.projectCreated'), 'success');
-
-            return true; // Успешное создание
-        } catch (error) {
-            console.error('Failed to create project:', error);
-            showNotification(getErrorMessage(error), 'error');
-
-            return false; // Ошибка создания
-        }
-    };
-
-    const handleUpdateProject = async (data: ProjectFormData) => {
-        if (!selectedProject) return false;
-
-        try {
-            const requestData = mapFormToRequest(data);
-
-            await updateProject({ id: selectedProject.id, data: requestData }).unwrap();
-            setIsEditDialogOpen(false);
-            showNotification(t('projects.projectUpdated'), 'success');
-
-            return true; // Успешное обновление
-        } catch (error) {
-            console.error('Failed to update project:', error);
-            showNotification(getErrorMessage(error), 'error');
-
-            return false; // Ошибка обновления
-        }
-    };
-
-    const handleDeleteProject = async () => {
-        if (!selectedProject) return;
-
-        try {
-            await deleteProject(selectedProject.id).unwrap();
-            setIsDeleteDialogOpen(false);
-            showNotification(t('projects.projectDeleted'), 'success');
-        } catch (error) {
-            console.error('Failed to delete project:', error);
-            showNotification(getErrorMessage(error), 'error');
-        }
-    };
-
-    // Обработчик для переключения режима отображения
-    const handleToggleView = () => {
-        setViewMode(viewMode === 'list' ? 'grid' : 'list');
-    };
+    // Если загрузка, показываем индикатор загрузки
+    if (isLoadingProjects) {
+        return <LoadingSplash />;
+    }
 
     return (
-        <Box sx={{ p: 3, maxWidth: 1200, margin: '0 auto' }}>
-            {/* Панель инструментов */}
-            <ProjectsToolbar
-                onCreateProject={handleOpenCreateDialog}
-                onToggleView={handleToggleView}
-                viewMode={viewMode}
-                searchValue={searchValue}
-                onSearchChange={handleSearchChange}
-                onAddFilter={() => {
-                    /* TODO: Реализовать фильтрацию */
-                }}
-                filtersCount={0}
-            />
+        <Container maxWidth={false} sx={{ py: 4 }}>
+            {projects.length !== 0 && (
+                <Box sx={{ mb: 4 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, p: 0 }}>
+                        <Typography variant="h4" component="h1">
+                            {t('projects.title')}
+                        </Typography>
 
-            {/* Отображение проектов в зависимости от выбранного режима */}
-            {viewMode === 'list' ? (
-                <ProjectsTable
-                    projects={projects}
-                    isLoading={isLoading}
-                    onMenuOpen={handleMenuOpen}
-                    onSort={handleSort}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                />
-            ) : (
-                <ProjectsGrid projects={projects} isLoading={isLoading} onMenuOpen={handleMenuOpen} />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<AddIcon />}
+                            onClick={handleCreateProjectClick}
+                        >
+                            {t('projects.createNewProject')}
+                        </Button>
+                    </Box>
+
+                    <Grid2 container spacing={2} alignItems="center" justifyContent="space-between">
+                        <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+                            <SearchInput
+                                value={searchTerm}
+                                onChange={setSearchTerm}
+                                onClear={clearSearch}
+                                placeholder={t('projects.searchProjects')}
+                            />
+                        </Grid2>
+
+                        <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+                            <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+                                <ViewToggleButtons viewMode={viewMode} onViewChange={handleViewModeChange} />
+                            </Box>
+                        </Grid2>
+                    </Grid2>
+                </Box>
             )}
 
-            {/* Пагинация */}
-            <TablePagination
-                component="div"
-                count={projectsPage?.totalElements || 0}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 25, 50]}
-                labelRowsPerPage={t('projects.rowsPerPage')}
-            />
+            {projects.length === 0 ? (
+                <ProjectEmptyState onCreateProjectClick={handleCreateProjectClick} />
+            ) : (
+                <Box>
+                    {viewMode === VIEW_MODE.TABLE ? (
+                        <ProjectTable
+                            projects={projects}
+                            sortField={sortState.field}
+                            sortDirection={sortState.direction}
+                            onSortChange={updateSort}
+                            onEdit={handleEditProjectClick}
+                            onDelete={handleDeleteProjectClick}
+                        />
+                    ) : (
+                        <ProjectGrid
+                            projects={projects}
+                            onEdit={handleEditProjectClick}
+                            onDelete={handleDeleteProjectClick}
+                        />
+                    )}
 
-            {/* Меню действий для проекта */}
-            <Menu
-                anchorEl={menuAnchorEl}
-                open={Boolean(menuAnchorEl)}
-                onClose={handleMenuClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-            >
-                <MenuItem
-                    onClick={() => {
-                        handleMenuClose();
-                        handleOpenEditDialog();
-                    }}
-                >
-                    {t('common.edit')}
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        handleMenuClose();
-                        handleOpenDeleteDialog();
-                    }}
-                >
-                    {t('common.delete')}
-                </MenuItem>
-            </Menu>
+                    {data && (
+                        <Pagination
+                            page={params.page}
+                            pageSize={params.size}
+                            totalPages={data.totalPages}
+                            totalElements={data.totalElements}
+                            onPageChange={setPage}
+                            onPageSizeChange={setPageSize}
+                        />
+                    )}
+                </Box>
+            )}
 
-            {/* Диалоги для создания, редактирования и удаления проектов */}
-            <EditProjectDialog
-                open={isCreateDialogOpen}
-                onClose={() => setIsCreateDialogOpen(false)}
-                onSubmit={handleCreateProject}
-                isSubmitting={isCreating}
-                error={createError ? getErrorMessage(createError) : undefined}
+            {/* Диалоги */}
+            <CreateProjectDialog
+                open={createDialog.dialog.open}
+                onClose={createDialog.closeDialog}
+                organizationId={organizationId}
             />
 
             <EditProjectDialog
-                open={isEditDialogOpen}
+                open={editDialog.dialog.open}
+                onClose={editDialog.closeDialog}
                 project={selectedProject}
-                onClose={() => setIsEditDialogOpen(false)}
-                onSubmit={handleUpdateProject}
-                isSubmitting={isUpdating}
-                error={updateError ? getErrorMessage(updateError) : undefined}
             />
 
-            <DeleteProjectDialog
-                open={isDeleteDialogOpen}
-                projectName={selectedProject?.name}
-                isDeleting={isDeleting}
-                onClose={() => setIsDeleteDialogOpen(false)}
-                onConfirm={handleDeleteProject}
-                error={deleteError ? getErrorMessage(deleteError) : undefined}
+            <DeleteProjectConfirmation
+                open={deleteDialog.dialog.open}
+                onClose={deleteDialog.closeDialog}
+                project={selectedProject}
             />
-
-            {/* Уведомления */}
-            <Snackbar
-                open={notification.open}
-                autoHideDuration={AUTO_HIDE_TIME}
-                onClose={() => setNotification({ ...notification, open: false })}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-                <Alert
-                    onClose={() => setNotification({ ...notification, open: false })}
-                    severity={notification.severity}
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    {notification.message}
-                </Alert>
-            </Snackbar>
-        </Box>
+        </Container>
     );
 };

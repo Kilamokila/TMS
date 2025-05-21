@@ -23,6 +23,11 @@
         "view": "View",
         "login": "Login"
     },
+    "errors": {
+        "oops": "Oops!",
+        "somethingWentWrong": "Something went wrong...",
+        "resourceNotFound": "The resource you are looking for does not exist"
+    },
     "languages": {
         "en": "English",
         "ru": "Russian"
@@ -30,6 +35,19 @@
     "landing": {
         "title": "Test Management System for QA",
         "description": "Here is a comprehensive platform designed to streamline and enhance the quality assurance process, developing by Comm-IT."
+    },
+    "organizations": {
+        "lastStep": "Last step...",
+        "createDescription": "Create an organization where your team's work processes will take place",
+        "createSuccess": "Organization created successfully",
+        "form": {
+            "name": "Organization Name",
+            "description": "Description",
+            "nameHolder": "For example: IT Department",
+            "descriptionHolder": "Enter organization description",
+            "create": "Create Organization",
+            "createDemo": "Create a demo organization to explore the application's functionality"
+        }
     },
     "header": {
         "projects": "Projects",
@@ -41,6 +59,7 @@
         "title": "Projects",
         "createNewProject": "Create new project",
         "searchProjects": "Search for projects",
+        "createdAt": "Created:",
         "addFilter": "Add filter",
         "statusActive": "Status: Active",
         "projectName": "Project Name",
@@ -48,6 +67,7 @@
         "testRuns": "Test runs",
         "milestones": "MILESTONES",
         "teamMembers": "Team members",
+        "teamMembersCount": "Members count:",
         "openIssues": "{{count}} open issues",
         "testCasesCount": "{{count}} test cases",
         "suitesCount": "{{count}} suites",
@@ -75,6 +95,7 @@
         "codeHint": "This code will be used in URLs and can't be changed later",
         "projectCode": "Project Code",
         "description": "Description",
+        "noDescription": "No description",
         "projectCreate": {
             "title": "Create New Project",
             "projectName": "Project Name",
@@ -100,10 +121,10 @@
             "description": "Create your first test case to start building your test repository. Test cases help you define and track your testing procedures."
         },
         "columns": {
-            "title": "TITLE",
-            "priority": "PRIORITY",
-            "status": "STATUS",
-            "actions": "ACTIONS"
+            "title": "Title",
+            "priority": "Priority",
+            "status": "Status",
+            "actions": "Actions"
         },
         "priority": {
             "high": "High",
