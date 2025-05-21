@@ -72,8 +72,8 @@ export function ConfirmationDialog({
             </DialogTitle>
 
             <DialogContent>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-                    {showWarningIcon && <WarningIcon color="warning" sx={{ fontSize: 32, mr: 2, mt: 0.5 }} />}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2, mt: 4 }}>
+                    {showWarningIcon && <WarningIcon color="warning" sx={{ fontSize: 32, mr: 2, mt: 5 }} />}
 
                     <Box>
                         {typeof message === 'string' ? <Typography variant="body1">{message}</Typography> : message}

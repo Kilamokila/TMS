@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from '@tanstack/react-router';
 import { useKeycloak } from './useKeycloak';
 import { LoadingSplash } from '@components/common/loader';
+import { ROUTES } from '@router/routes';
 
 export const ProtectedRoute: React.FC = () => {
     const { initialized, isAuthenticated } = useKeycloak();
@@ -9,13 +10,17 @@ export const ProtectedRoute: React.FC = () => {
 
     useEffect(() => {
         if (initialized && !isAuthenticated()) {
-            navigate({ to: '/' });
+            navigate({ to: `/${ROUTES.LANDING}`, replace: true });
         }
-    }, [initialized, isAuthenticated]);
+    }, [initialized, isAuthenticated, navigate]);
 
-    if (!initialized || !isAuthenticated()) {
+    if (!initialized) {
         return <LoadingSplash />;
-    } else {
+    }
+
+    if (isAuthenticated()) {
         return <Outlet />;
     }
+
+    return <LoadingSplash />;
 };

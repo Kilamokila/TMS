@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem } from '@mui/material';
-import { Button } from '@components/common/ui-kit/Button';
+import { AppBar, Toolbar, Box, IconButton, Menu, MenuItem, useTheme, Button } from '@mui/material';
 import styles from './styles.module.less';
 import { CommitLogoSVG } from '@assets/svg';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +14,7 @@ interface LandingHeaderProps {
 export const LandingHeader: React.FC<LandingHeaderProps> = ({ onLogin }) => {
     const { language, changeLanguage } = useLanguageContext();
     const { t } = useTranslation();
+    const theme = useTheme();
     const [langMenuAnchorEl, setLangMenuAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,9 +34,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onLogin }) => {
         <AppBar
             position="static"
             sx={{
-                bgcolor: 'background.default',
-                color: 'text.primary',
-                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                bgcolor: theme.palette.background.default,
+                color: theme.palette.text.primary,
+                boxShadow: theme.shadows[4],
             }}
         >
             <Toolbar className={styles.toolbar}>

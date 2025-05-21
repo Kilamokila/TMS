@@ -27,6 +27,7 @@ const config: UserConfig = defineConfig({
             '@assets': path.resolve(__dirname, 'src/assets'),
             '@router': path.resolve(__dirname, 'src/router'),
             '@store': path.resolve(__dirname, 'src/store'),
+            '@schemas': path.resolve(__dirname, 'src/schemas'),
             '@src': path.resolve(__dirname, 'src'),
         },
     },

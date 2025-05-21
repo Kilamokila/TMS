@@ -7,6 +7,8 @@ import { Sidebar } from '../sidebar';
 import { ROUTES_WITH_SIDEBAR } from '@router/routes';
 import { ProjectSidebarContent } from '@pages/project-repository/components/ProjectSidebarContent';
 import { ErrorBoundary } from 'react-error-boundary';
+import { NotificationManager } from '@components/common/notifications';
+import { ErrorFallback } from '@components/errors';
 
 export const AppLayout: React.FC = () => {
     const location = useLocation();
@@ -39,9 +41,10 @@ export const AppLayout: React.FC = () => {
                     <Sidebar>{renderSidebarContent()}</Sidebar>
                 </Box>
             )}
-            <ErrorBoundary fallback={<div>Что-то пошло не так</div>}>
+            <ErrorBoundary fallback={<ErrorFallback />}>
                 <Box className={styles.main} component="main">
                     <Outlet />
+                    <NotificationManager />
                 </Box>
             </ErrorBoundary>
         </Box>

@@ -1,4 +1,5 @@
 export enum EStorageKeys {
     THEME_MODE = 'THEME_MODE',
     LANGUAGE = 'LANGUAGE',
+    PROJECTS_VIEW_MODE = 'PROJECTS_VIEW_MODE',
 }
