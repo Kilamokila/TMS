@@ -8,13 +8,7 @@ import { clearRoles, setRoles } from '@store/reducers/roles/actions';
 import { KeycloakContext } from './KeycloakContext';
 import { IAuthUser, TKeycloakToken } from './types/types';
 
-const initOptions: Keycloak.KeycloakConfig = {
-    url: KEYCLOAK_CONFIG.URL,
-    realm: KEYCLOAK_CONFIG.REALM,
-    clientId: KEYCLOAK_CONFIG.CLIENT_ID,
-};
-
-const keycloak = new Keycloak(initOptions);
+const keycloak = new Keycloak(KEYCLOAK_CONFIG);
 
 export const tokenManager = (() => {
     let accessToken: TKeycloakToken = null;

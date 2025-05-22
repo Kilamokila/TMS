@@ -7,3 +7,4 @@ export * from './organizationsApi';
 export * from './userOrganizationsApi';
 export * from './projectUsersApi';
 export * from './testSuitesApi';
+export * from './aiGenerationApi';

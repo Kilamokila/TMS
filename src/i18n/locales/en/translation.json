@@ -21,7 +21,9 @@
         "updating": "Updating...",
         "processing": "Processing...",
         "view": "View",
-        "login": "Login"
+        "login": "Login",
+        "ask": "Ask",
+        "reset": "Reset"
     },
     "errors": {
         "oops": "Oops!",
@@ -339,5 +341,9 @@
             "testCasesReordered": "Test cases reordered successfully",
             "testCaseRemoved": "Test case removed from plan successfully"
         }
+    },
+    "aiAssistant": {
+        "title": "Welcome to the AI Assistant!",
+        "textarea": "Enter your prompt"
     }
 }

@@ -15,6 +15,7 @@ import { LANGUAGE, TLanguage } from '@context/language/types/languageModes';
 import { useKeycloak } from '@context/auth';
 import { TMSLogoDarkSVG, TMSLogoLightSVG } from '@assets/svg';
 import shadows from '@mui/material/styles/shadows';
+import AIAssistant from './components/AIAssistant/AIAssistant';
 
 export const Header: React.FC = () => {
     const { mode, toggleTheme } = useThemeContext();
@@ -68,6 +69,7 @@ export const Header: React.FC = () => {
                     </Typography>
                 </nav>
                 <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+                    <AIAssistant />
                     <IconButton
                         onClick={handleLangMenuOpen}
                         color="inherit"
